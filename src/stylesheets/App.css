@@ -1,1 +1,11 @@
+.helloDiv {
+    position: fixed;
+    top: 20%;
+    left: 10%;
+}
 
+.liveDiv {
+    top: 20%;
+    right: 10%;
+    position: fixed;
+}
