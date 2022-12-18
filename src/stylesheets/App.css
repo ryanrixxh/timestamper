@@ -1,11 +1,17 @@
 .helloDiv {
     position: fixed;
     top: 20%;
-    left: 10%;
+    left: 15%;
 }
 
 .liveDiv {
     top: 20%;
     right: 10%;
     position: fixed;
+}
+
+.createMarker {
+    position: fixed;
+    top: 40%;
+    left: 15%;
 }

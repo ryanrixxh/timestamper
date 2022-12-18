@@ -1,4 +1,6 @@
 import './stylesheets/App.css';
+import './components/Hotkey.tsx'
+import Hotkey from './components/Hotkey';
 
 function App() {
   return (
@@ -8,6 +10,12 @@ function App() {
           Login to Twitch
         </h1>
       </div>
+      <div className="createMarker">
+        <h2 className="text-4xl font-bold text-slate-300 hover:text-slate-200 text-center">
+          Create Marker
+        </h2>
+      </div>
+      <Hotkey />
       <div className="liveDiv">
         <h1 className="text-5xl font-bold text-slate-300 hover:text-slate-200 text-center">
           Live
