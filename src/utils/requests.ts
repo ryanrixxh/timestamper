@@ -37,9 +37,9 @@ export async function getStatus(token: string, login: string) {
             'Client-Id': 'v89m5cded20ey1ppxxsi5ni53c3rv0',
         }
     }
-
+    console.log("Request: ", 'https://api.twitch.tv/helix/streams?user_login=' + login)
     const response = await axios.get(
-        'https://api.twitch.tv/helix/streams?&user_login=' + login,
+        'https://api.twitch.tv/helix/streams?user_login=' + login,
         config
     )
     return response.data.data[0]

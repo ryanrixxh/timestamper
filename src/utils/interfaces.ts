@@ -4,3 +4,9 @@ export interface User {
     login?: string,
 }
 
+export interface Stream {
+    game_name?: string,
+    title?: string,
+    type?: string,
+}
+
