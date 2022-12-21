@@ -27,7 +27,7 @@ function Main() {
                 </h1>
             </div>
             <Live login={user?.login}/>
-            <Marker />
+            <Marker id={user?.id}/>
             <Hotkey />
         </div>
     )

@@ -17,7 +17,6 @@ function Live(user: User) {
             if(user?.login) {
                 const newDetails = await getStatus(token, user?.login)
                 // TODO - Add other states to display more details
-                console.log(newDetails)
                 setLive(newDetails ? 'Live' : 'Offline')
                 if(newDetails) {
                     setStreamDetails(newDetails)
