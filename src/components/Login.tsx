@@ -9,6 +9,7 @@ function buildURL(): string {
     return href
 }
 
+//First screen that a user sees upon entering the app
 function Login() {
     const link = buildURL()
     return (
