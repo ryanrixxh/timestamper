@@ -21,3 +21,9 @@
     bottom: 10%;
     right: 10%;
 }
+
+.loggedDiv {
+    position: fixed;
+    top: 20%;
+    left: 15%;
+}
