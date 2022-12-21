@@ -3,11 +3,12 @@ import { useState, useEffect } from 'react'
 import Live from "./Live"
 import Marker from "./Marker"
 import Hotkey from "./Hotkey"
+import { User } from '../types/User'
 
 
 //Main Screen that renders most other components and response data as props to them
 function Main() {
-    const [user, setUser] = useState<any>()
+    const [user, setUser] = useState<User>()
     let token = getToken()
 
     useEffect(() => {
