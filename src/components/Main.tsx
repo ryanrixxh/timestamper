@@ -29,10 +29,6 @@ function Main() {
             <Live login={user?.login}/>
             <Marker />
             <Hotkey />
-            <div className="shoutout flex flex-wrap max-w-sm font-bold text-slate-300 text-center">
-                <p className="mr-1 text-xl">Made by</p>
-                <a className="text-xl text-violet-300 hover:text-violet-200" href="https://www.twitch.tv/futuuure_" target="_blank" rel="noopener noreferrer">twitch.tv/futuuure_</a>
-            </div>
         </div>
     )
 }
