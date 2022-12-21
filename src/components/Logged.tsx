@@ -10,7 +10,6 @@ function grabToken(): string {
 }
 
 function Logged() {
-    //TODO - Make a request here for user details. Could also use this request to test the token. 
     const [name, setName] = useState()
     let token = grabToken()
 
@@ -22,6 +21,7 @@ function Logged() {
         }
         loadName()
     })
+
     return (    
         <div className="loggedDiv">
             <h1 id="loginHeader" className="text-5xl font-bold text-slate-300 hover:text-slate-200 text-center">
