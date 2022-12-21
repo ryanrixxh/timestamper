@@ -29,23 +29,7 @@ export async function getUser(token: string) {
     return response.data.data[0]
 }
 
-// //Gets the broadcast_id of the streamer for other requests
-// export async function getId(token: string) {
-//     var config = {
-//         headers: {
-//             'Authorization': 'Bearer ' + token,
-//             'Client-Id': 'v89m5cded20ey1ppxxsi5ni53c3rv0',
-//         }
-//     }
-
-//     const response = await axios.get(
-//         'https://api.twitch.tv/helix/users',
-//         config
-//     )
-//     console.log(response.data.data[0])
-//     return response.data.data[0].id
-// }
-
+//Gets the live status of the streamer
 export async function getStatus(token: string) {
 
 }

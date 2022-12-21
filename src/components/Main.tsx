@@ -19,7 +19,7 @@ function Main() {
         }
         loadUser()
     }, [token])
-
+    
     return (  
         <div >  
         <div className="loggedDiv">
@@ -27,7 +27,7 @@ function Main() {
                 Welcome { user?.display_name }
             </h1>
         </div>
-        <Live/>
+        <Live id={user?.id}/>
         <Marker />
         <Hotkey />
         </div>
