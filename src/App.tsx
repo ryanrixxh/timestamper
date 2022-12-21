@@ -20,7 +20,7 @@ function App() {
       </div>
       <div className="shoutout flex flex-wrap max-w-sm font-bold text-slate-300 hover:text-slate-200 text-center">
         <p className="mr-1 text-xl">Made by</p>
-        <a className="text-xl" href="https://www.twitch.tv/futuuure_"> twitch.tv/futuuure_</a>
+        <a className="text-xl text-violet-300 hover:text-violet-200" href="https://www.twitch.tv/futuuure_"> twitch.tv/futuuure_</a>
       </div>
     </div>
   );
