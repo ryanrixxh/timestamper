@@ -15,7 +15,7 @@ function Live(user: User) {
     useEffect(() => {
         async function loadStatus() {
             if(user?.login) {
-                const newDetails = await getStatus(token, user?.login)
+                const newDetails = await getStatus(user?.login)
                 // TODO - Add other states to display more details
                 setLive(newDetails ? 'Live' : 'Offline')
                 if(newDetails) {
