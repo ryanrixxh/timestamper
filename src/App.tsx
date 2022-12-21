@@ -1,12 +1,10 @@
 import './stylesheets/App.css'
-import './components/Hotkey.tsx'
 import Hotkey from './components/Hotkey'
 import Login from './components/Login'
 import Logged from './components/Logged'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 function App() {
-  console.log(window.location.hash)
   return (
     <BrowserRouter>
       <div className="App bg-neutral-500 h-screen">
