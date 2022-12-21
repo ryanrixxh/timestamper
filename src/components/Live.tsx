@@ -7,6 +7,7 @@ let offline: Stream = {
     title: '',
 }
 
+//Displays live status of the user & broadcast details
 function Live(user: User) {
     const [streamDetails, setStreamDetails] = useState<Stream>()
     const [live, setLive] = useState<string>()

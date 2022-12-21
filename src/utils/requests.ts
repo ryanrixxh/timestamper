@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 //Utility functions to make requests to the Twitch API
-//Seperated to prevent overcomplicating component code
+
 const client = axios.create({
     baseURL: 'https://api.twitch.tv/helix/',
     timeout: 1000,
