@@ -29,8 +29,8 @@ export async function getUser(token: string) {
     return response.data.data[0]
 }
 
-//Gets the live status of the streamer
-export async function getStatus(token: string,id: string) {
+//Gets the live status of the streamer. Returns undefined if offline
+export async function getStatus(token: string, login: string) {
     var config = {
         headers: {
             'Authorization': 'Bearer ' + token,
@@ -39,7 +39,7 @@ export async function getStatus(token: string,id: string) {
     }
 
     const response = await axios.get(
-        'https://api.twitch.tv/helix/streams?' + id,
+        'https://api.twitch.tv/helix/streams?&user_login=' + login,
         config
     )
     return response.data.data[0]

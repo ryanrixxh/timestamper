@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import Live from "./Live"
 import Marker from "./Marker"
 import Hotkey from "./Hotkey"
-import { User } from '../types/User'
+import { User } from '../utils/interfaces'
 
 
 //Main Screen that renders most other components and response data as props to them
@@ -15,7 +15,6 @@ function Main() {
         async function loadUser() {
             const newUser = await getUser(token)
             setUser(newUser)
-            console.log(newUser)
         }
         loadUser()
     }, [token])
@@ -27,7 +26,7 @@ function Main() {
                     Welcome { user?.display_name }
                 </h1>
             </div>
-            <Live id={user?.id}/>
+            <Live login={user?.login}/>
             <Marker />
             <Hotkey />
             <div className="shoutout flex flex-wrap max-w-sm font-bold text-slate-300 text-center">
