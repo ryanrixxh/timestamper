@@ -10,7 +10,6 @@ function Main() {
     const [user, setUser] = useState<any>()
     let token = getToken()
 
-
     useEffect(() => {
         async function loadUser() {
             const newUser = await getUser(token)
@@ -22,14 +21,18 @@ function Main() {
     
     return (  
         <div >  
-        <div className="loggedDiv">
-            <h1 id="loginHeader" className="text-5xl font-bold text-slate-300 hover:text-slate-200 text-center">
-                Welcome { user?.display_name }
-            </h1>
-        </div>
-        <Live id={user?.id}/>
-        <Marker />
-        <Hotkey />
+            <div className="loggedDiv">
+                <h1 id="loginHeader" className="text-5xl font-bold text-slate-300 hover:text-slate-200 text-center">
+                    Welcome { user?.display_name }
+                </h1>
+            </div>
+            <Live id={user?.id}/>
+            <Marker />
+            <Hotkey />
+            <div className="shoutout flex flex-wrap max-w-sm font-bold text-slate-300 text-center">
+                <p className="mr-1 text-xl">Made by</p>
+                <a className="text-xl text-violet-300 hover:text-violet-200" href="https://www.twitch.tv/futuuure_" target="_blank" rel="noopener noreferrer">twitch.tv/futuuure_</a>
+            </div>
         </div>
     )
 }
