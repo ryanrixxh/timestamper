@@ -36,20 +36,20 @@ function Live(user: User) {
             <div>
                 <div className='flex flex-row-reverse'>
                     <img src={LiveImage} alt='live icon' width='50' height='50'></img>
-                    <h1 className="text-4xl font-bold text-slate-300 hover:text-slate-200 text-right">
+                    <h1 className="text-4xl font-bold text-slate-300 text-right">
                         { live }
                     </h1>
                 </div>
-                <h2 className="text-2xl font-bold text-slate-300 hover:text-slate-200 text-right">
+                <h2 className="text-2xl font-bold text-slate-300  text-right">
                     Playing: { streamDetails?.game_name }
                 </h2> 
-                <h2 className="text-m font-bold text-slate-300 hover:text-slate-200 text-right">
+                <h2 className="text-m font-bold text-slate-300 text-right">
                     Title: { streamDetails?.title }
                 </h2>
             </div>
             } 
             { live === 'Offline' &&
-                <h1 className="text-4xl font-bold text-slate-300 hover:text-slate-200 text-right">
+                <h1 className="text-4xl font-bold text-slate-300 text-right">
                     { live }
                 </h1> 
             }

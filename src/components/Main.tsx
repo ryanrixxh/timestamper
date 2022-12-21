@@ -21,7 +21,7 @@ function Main() {
     return (  
         <div >  
             <div className="loggedDiv">
-                <h1 id="loginHeader" className="text-5xl font-bold text-slate-300 hover:text-slate-200 text-center">
+                <h1 id="loginHeader" className="text-5xl font-bold text-slate-300 text-center">
                     Welcome { user?.display_name }
                 </h1>
             </div>
