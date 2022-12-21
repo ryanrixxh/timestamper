@@ -18,6 +18,10 @@ function App() {
           Live
         </h1>
       </div>
+      <div className="shoutout flex flex-wrap max-w-sm font-bold text-slate-300 hover:text-slate-200 text-center">
+        <p className="mr-1 text-xl">Made by</p>
+        <a className="text-xl" href="https://www.twitch.tv/futuuure_"> twitch.tv/futuuure_</a>
+      </div>
     </div>
   );
 }

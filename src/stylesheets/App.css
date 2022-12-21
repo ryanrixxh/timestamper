@@ -15,3 +15,9 @@
     top: 40%;
     left: 15%;
 }
+
+.shoutout {
+    position: fixed;
+    bottom: 10%;
+    right: 10%;
+}
