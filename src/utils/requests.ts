@@ -18,6 +18,8 @@ export async function createLiveListener(id?: string) {
     //needs a check to see if the message is a welcome or subscription message
     socket.onmessage = (event) => {
         const message = JSON.parse(event.data)
+        
+        //If twitch message is a welcome, make a request to subcribe data to the websocket.
         if (message.metadata.message_type === 'session_welcome') {
             ws_id = message.payload.session.id
 
@@ -31,17 +33,13 @@ export async function createLiveListener(id?: string) {
                     "method": "websocket",
                     "session_id": ws_id,
                 }
-            }
-            
+            }         
             client.post('/eventsub/subscriptions', body)
-        } else {
+        
+        } else if(message.metadata.message_type !== 'keepalive') {
             console.log(message)
         }
     }
-
-
-
-
 }
 
 //Utility to grab token from response_uri
@@ -66,7 +64,6 @@ export async function getStatus(login: string) {
 }
 
 export async function createMarker(id?: string) {
-    //TODO - request headers arent being sent for some reason. Axios
     let reqId = id ? id : ''
     var body: any = {
         'user_id': reqId,
