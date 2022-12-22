@@ -1,4 +1,4 @@
-import { getUser } from "../utils/requests"
+import { getUser, createLiveListener } from "../utils/requests"
 import { useState, useEffect } from 'react'
 import Live from "./Live"
 import Marker from "./Marker"
@@ -10,13 +10,15 @@ import { User } from '../utils/interfaces'
 function Main() {
     const [user, setUser] = useState<User>()
 
+
     useEffect(() => {
         async function loadUser() {
             const newUser = await getUser()
             setUser(newUser)
         }
         loadUser()
-    }, [])
+        createLiveListener(user?.id)
+    }, [user?.id])
     
     return (  
         <div >  

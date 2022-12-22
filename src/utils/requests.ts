@@ -12,6 +12,38 @@ const client = axios.create({
     }
 })
 
+export async function createLiveListener(id?: string) {
+    let ws_id
+    const socket = new WebSocket('wss://eventsub-beta.wss.twitch.tv/ws')
+    //needs a check to see if the message is a welcome or subscription message
+    socket.onmessage = (event) => {
+        const message = JSON.parse(event.data)
+        if (message.metadata.message_type === 'session_welcome') {
+            ws_id = message.payload.session.id
+
+            const body: any = {
+                "type": "stream.online",
+                "version": "1",
+                "condition": {
+                    "broadcaster_user_id": id
+                },
+                "transport": {
+                    "method": "websocket",
+                    "session_id": ws_id,
+                }
+            }
+            
+            client.post('/eventsub/subscriptions', body)
+        } else {
+            console.log(message)
+        }
+    }
+
+
+
+
+}
+
 //Utility to grab token from response_uri
 export function getToken(): string {
     const fullToken = window.location.hash
@@ -40,7 +72,7 @@ export async function createMarker(id?: string) {
         'user_id': reqId,
         'description': 'Marker from Timestamper'
     }
-    const response = await client.post('https://api.twitch.tv/helix/streams/markers',body)
+    const response = await client.post('https://api.twitch.tv/helix/streams/markers', body)
     console.log(response)
     return response
 }
