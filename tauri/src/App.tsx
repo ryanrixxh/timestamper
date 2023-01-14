@@ -1,23 +1,20 @@
 import { useState, useEffect } from 'react'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import { emit, listen } from '@tauri-apps/api/event'
 import { invoke } from '@tauri-apps/api/tauri'
-import './App.css'
+import Login from './Login'
+import Home from './Home'
 
 
 function App() {
-  console.log('JS is printing!')
-  listen('hello-event', (event) => {
-    console.log(event)
-  })
-
   return (
-    <div className="App">
-      <div className="card">
-        <button onClick={async () => { invoke('twitch_auth_flow') }}>
-          Login
-        </button>
-      </div>
-    </div>
+    <HashRouter>
+      <Routes>
+        <Route path="/" element={<Login />}>
+          <Route path="home" element={<Home />}/>
+        </Route>
+      </Routes>
+    </HashRouter>
   )
 }
 
