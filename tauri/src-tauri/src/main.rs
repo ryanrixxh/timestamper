@@ -1,6 +1,5 @@
 use tauri::{Manager, AppHandle, Window};
 use url::Url;
-use std::{thread, time};
 
 mod navigate;
 
@@ -11,7 +10,7 @@ const TWITCH_AUTH_URL: &str = concat!(
   "&redirect_uri=https://timestamper/logged",
   "&scope=channel%3Amanage%3Abroadcast&state=1"
 );
-const TWITCH_REDIRECT_URL: &str = concat!();
+const TWITCH_REDIRECT_URL: &str = "https://timestamper/logged";
 
 #[derive(Clone, serde::Serialize)]
 struct Payload {
@@ -31,7 +30,12 @@ async fn twitch_auth_flow(app: AppHandle) {
       //When window navigates, capture url
       .on_navigation(move |url: url::Url| {
         let str = url.as_str();
-        println!("{}", str);
+        //Grab token from return url
+        if str.starts_with(TWITCH_REDIRECT_URL) {
+          let url_vec = str.split("=").collect::<Vec<&str>>();
+          let token = url_vec[1].split("&").collect::<Vec<&str>>()[0];
+          println!("Token: {}", token);
+        }
         true
       })
       .build()

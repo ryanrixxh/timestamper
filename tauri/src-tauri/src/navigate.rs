@@ -1,10 +1,12 @@
+// Navigation code reference: https://gist.github.com/silvanshade/16df59ab6c3ad61a3825f1b9670cff11
+
 use url::Url;
 use tauri::{Manager, AppHandle, Window};
 
 pub type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 pub type BoxResult<T> = Result<T, BoxError>;
 
-// Navigation code reference: https://gist.github.com/silvanshade/16df59ab6c3ad61a3825f1b9670cff11
+
 #[cfg(target_os = "windows")]
 pub fn webview_navigate(window: &Window, url: Url) -> BoxResult<()> {
     println!("navigating");
