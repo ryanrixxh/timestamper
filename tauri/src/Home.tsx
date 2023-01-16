@@ -3,11 +3,8 @@ import { emit, listen } from '@tauri-apps/api/event'
 import { invoke } from '@tauri-apps/api/tauri'
 
 
-function Login() {
-  console.log('JS is printing!')
-  listen('hello-event', (event) => {
-    console.log(event)
-  })
+function Home(props) {
+  console.log(props.token)
 
   return (
     <div className="App">
@@ -20,4 +17,4 @@ function Login() {
   )
 }
 
-export default Login
+export default Home
