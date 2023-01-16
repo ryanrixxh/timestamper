@@ -9,7 +9,6 @@ function Login({ sendToApp }) {
 
   async function auth() {
     await invoke('twitch_auth_flow').then((message) => {
-      console.log("Rust sent: ", message)
       setToken(message as any)
       sendToApp(message as any)
     })

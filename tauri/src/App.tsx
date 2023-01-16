@@ -12,7 +12,6 @@ function App() {
 
 
   const sendToApp = (token: string) => {
-    console.log(token)
     if(token !== 'empty' && token.length > 0) {
       setAuthToken(token)
       setPageState('Home')

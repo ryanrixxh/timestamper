@@ -1,17 +1,25 @@
-import { useState, useEffect } from 'react'
-import { emit, listen } from '@tauri-apps/api/event'
-import { invoke } from '@tauri-apps/api/tauri'
+import { useState, useEffect, useReducer } from 'react'
+import { setToken, getUserData } from './utils/requests'
+import { User, Stream } from './utils/interfaces'
 
 
 function Home(props) {
-  console.log(props.token)
+  const [user, setUser] = useState<User>()
 
-  return (
+  useEffect(() => { 
+    setToken(props.token)
+    async function getUser() {
+      const user = await getUserData()
+      setUser(user)
+    }
+    getUser()
+  }, [])
+   return (
     <div className="App">
       <div className="card">
-        <button>
-          Home
-        </button>
+        <h1>
+          Hello {user?.display_name}
+        </h1>
       </div>
     </div>
   )

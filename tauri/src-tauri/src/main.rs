@@ -51,6 +51,7 @@ async fn twitch_auth_flow(app: AppHandle) -> String {
       })
       .build()
       .unwrap();
+
   
   //Navigate to auth url
   let auth = Url::parse(TWITCH_AUTH_URL).unwrap();
@@ -62,6 +63,7 @@ async fn twitch_auth_flow(app: AppHandle) -> String {
     if let Ok(read_token) = token_read.read() {
       if *read_token != "empty" {
         recieved = true;
+        window.close();
         return (*read_token.clone()).to_string().into();
       }
     }
