@@ -19,3 +19,7 @@ export async function getUserData() {
   let userData: any = response.data
   return userData.data[0]
 }
+
+export async function getStatus() {
+  const client = await getClient()
+}
