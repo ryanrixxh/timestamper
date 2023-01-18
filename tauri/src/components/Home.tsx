@@ -1,6 +1,6 @@
 import { useState, useEffect, useReducer } from 'react'
-import { setToken, getUserData } from './utils/requests'
-import { User, Stream } from './utils/interfaces'
+import { setToken, getUserData } from '../utils/requests'
+import { User, Stream } from '../utils/interfaces'
 
 
 function Home(props) {

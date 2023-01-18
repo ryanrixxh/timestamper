@@ -19,7 +19,7 @@ function Login({ sendToApp }) {
     <div className="App">
       <div className="card">
         <button onClick={auth}>
-          Login + {token}
+          Login
         </button>
       </div>
     </div>
