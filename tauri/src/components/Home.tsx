@@ -1,20 +1,28 @@
 import { useState, useEffect, useReducer } from 'react'
-import { setToken, getUserData } from '../utils/requests'
+import { createClient, getUserData, createLiveListener } from '../utils/api'
 import { User, Stream } from '../utils/interfaces'
-
 
 function Home(props) {
   const [user, setUser] = useState<User>()
 
   useEffect(() => { 
-    setToken(props.token)
+    createClient(props.token)
     async function getUser() {
       const user = await getUserData()
       setUser(user)
     }
     getUser()
   }, [])
-   return (
+
+  // When user value changes from undefined make a websocket connection
+  useEffect(() => {
+    if(user?.id) {
+      console.log(user)
+      createLiveListener(user?.id)
+    }
+  }, [user])
+  
+  return (
     <div className="App">
       <div className="card">
         <h1 className="text-3xl font-bold">
