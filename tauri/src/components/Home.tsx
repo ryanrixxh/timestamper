@@ -5,6 +5,7 @@ import { User, Stream } from '../utils/interfaces'
 function Home(props) {
   const [user, setUser] = useState<User>()
   const [stream, setStream] = useState<Stream>()
+  const [hotkey, setHotkey] = useState<string>()
 
   // Websocket to listen for changes in stream status
   
@@ -59,7 +60,14 @@ function Home(props) {
         <h1 className="text-3xl font-bold">
           Hello {user?.display_name}
         </h1>
+        <h2> Your current category is: {stream?.category_name}</h2>
         <h2> Your current title is: {stream?.title}</h2>
+
+        <h1 className="text-3xl font-bold">
+          Marker Hotkeys
+        </h1>
+        <button>Set Hotkey</button>
+        <h2>Your hotkey is: {hotkey}</h2>
       </div>
     </div>
   )
