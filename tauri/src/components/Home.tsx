@@ -17,7 +17,7 @@ function Home(props) {
    return (
     <div className="App">
       <div className="card">
-        <h1>
+        <h1 className="text-3xl font-bold">
           Hello {user?.display_name}
         </h1>
       </div>
