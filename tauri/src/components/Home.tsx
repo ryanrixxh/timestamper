@@ -1,8 +1,16 @@
 import { useState, useEffect, useReducer } from 'react'
 import { createClient, getStreamData, getUserData, postEventSub } from '../utils/api'
 import { User, Stream } from '../utils/interfaces'
+import { register } from '@tauri-apps/api/globalShortcut'
+
+async function changeShortcut() {
+  await register('Shift+C', () => {
+    console.log('shortcut triggered!')
+  })
+}
 
 function Home(props) {
+
   const [user, setUser] = useState<User>()
   const [stream, setStream] = useState<Stream>()
   const [hotkey, setHotkey] = useState<string>()
@@ -48,6 +56,7 @@ function Home(props) {
   useEffect(() => { 
     createClient(props.token)
     getUser()
+    changeShortcut()
   }, [])
 
   // When user value changes from undefined make a websocket connection
