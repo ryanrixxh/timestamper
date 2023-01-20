@@ -21,6 +21,12 @@ export async function getUserData() {
   return response.data.data[0]
 }
 
+export async function getStreamData(id: any) {
+  const request = '/channels?broadcaster_id=' + id
+  const response = await client.get(request)
+  return response.data.data[0]
+}
+
 export async function postEventSub(body: any) {
   client.post('/eventsub/subscriptions', body)
 }

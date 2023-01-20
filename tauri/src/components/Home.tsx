@@ -1,5 +1,5 @@
 import { useState, useEffect, useReducer } from 'react'
-import { createClient, getUserData, postEventSub } from '../utils/api'
+import { createClient, getStreamData, getUserData, postEventSub } from '../utils/api'
 import { User, Stream } from '../utils/interfaces'
 
 function Home(props) {
@@ -8,8 +8,17 @@ function Home(props) {
   const [hotkey, setHotkey] = useState<string>()
 
   // Websocket to listen for changes in stream status
-  
-  async function createLiveListener(id?: string) {
+  async function getUser() {
+    const user = await getUserData()
+    setUser(user)
+  }
+
+  async function getStream(id: any) {
+    const stream = await getStreamData(id)
+    setStream(stream)
+  }
+
+  async function createWebsocket(id: string, eventType: string) {
     let ws_id
     const socket = new WebSocket('wss://eventsub-beta.wss.twitch.tv/ws')
     //needs a check to see if the message is a welcome or subscription message
@@ -19,7 +28,7 @@ function Home(props) {
           ws_id = message.payload.session.id
   
           const body: any = {
-              "type": "channel.update",
+              "type": eventType,
               "version": "1",
               "condition": {
                   "broadcaster_user_id": id
@@ -31,18 +40,13 @@ function Home(props) {
           }
         postEventSub(body)
       } else if (message.metadata.message_type !== 'session_keepalive') {
-          console.log(message.payload.event)
-          setStream(message.payload.event)
+          getStream(user?.id)
       }
     }
   }
 
   useEffect(() => { 
     createClient(props.token)
-    async function getUser() {
-      const user = await getUserData()
-      setUser(user)
-    }
     getUser()
   }, [])
 
@@ -50,7 +54,8 @@ function Home(props) {
   useEffect(() => {
     if(user?.id) {
       console.log(user)
-      createLiveListener(user?.id)
+      getStream(user?.id)
+      createWebsocket(user?.id, "channel.update") // TODO: Use stream.online when testing is done
     }
   }, [user])
   
@@ -60,13 +65,13 @@ function Home(props) {
         <h1 className="text-3xl font-bold">
           Hello {user?.display_name}
         </h1>
-        <h2> Your current category is: {stream?.category_name}</h2>
-        <h2> Your current title is: {stream?.title}</h2>
+        <h2> {stream?.game_name} </h2>
+        <h2> {stream?.title} </h2>
 
-        <h1 className="text-3xl font-bold">
+        <h1 className="text-3xl font-bold mt-4">
           Marker Hotkeys
         </h1>
-        <button>Set Hotkey</button>
+        <button className="text-xl border">Set Hotkey</button>
         <h2>Your hotkey is: {hotkey}</h2>
       </div>
     </div>
