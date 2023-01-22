@@ -3,17 +3,19 @@ import { createClient, getStreamData, getUserData, postEventSub } from '../utils
 import { User, Stream } from '../utils/interfaces'
 import { register } from '@tauri-apps/api/globalShortcut'
 
-async function changeShortcut() {
-  await register('Shift+C', () => {
-    console.log('shortcut triggered!')
-  })
-}
-
 function Home(props) {
-
   const [user, setUser] = useState<User>()
   const [stream, setStream] = useState<Stream>()
-  const [hotkey, setHotkey] = useState<string>()
+  const [hotkey, setHotkey] = useState<string>('Shift+C')
+
+  async function changeShortcut(newHotkey: string) {
+    let hotkey = newHotkey
+    await register(newHotkey, () => {
+      // This code runs when the hotkey is pressed
+      console.log('this should only run when pressed')
+    })
+    setHotkey(hotkey)
+  }
 
   // Websocket to listen for changes in stream status
   async function getUser() {
@@ -56,7 +58,7 @@ function Home(props) {
   useEffect(() => { 
     createClient(props.token)
     getUser()
-    changeShortcut()
+    changeShortcut('Shift+C')
   }, [])
 
   // When user value changes from undefined make a websocket connection

@@ -14,8 +14,6 @@ export function createClient(token_input) {
   })
 }
 
-
-
 export async function getUserData() {
   const response = await client.get('/users')
   return response.data.data[0]
