@@ -2,6 +2,7 @@ import { useState, useEffect, useReducer } from 'react'
 import { createClient, getStreamData, getUserData, postEventSub } from '../utils/api'
 import { User, Stream } from '../utils/interfaces'
 import { register } from '@tauri-apps/api/globalShortcut'
+import { invoke } from '@tauri-apps/api/tauri'
 
 function Home(props) {
   const [user, setUser] = useState<User>()
@@ -82,7 +83,7 @@ function Home(props) {
         <h1 className="text-3xl font-bold mt-4">
           Marker Hotkeys
         </h1>
-        <button className="text-xl border">Set Hotkey</button>
+        <button className="text-xl border" onClick={async () => {await invoke('listen_for_keys')}}>Set Hotkey</button>
         <h2>Your hotkey is: {hotkey}</h2>
       </div>
     </div>

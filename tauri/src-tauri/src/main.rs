@@ -5,7 +5,7 @@ use std::thread::sleep;
 use core::time::Duration;
 use std::cell::RefCell;
 use std::sync::{Arc, RwLock};
-
+use device_query::{DeviceQuery, DeviceState, Keycode};
 mod navigate;
 
 const TWITCH_AUTH_URL: &str = concat!(
@@ -27,7 +27,7 @@ struct Payload {
   windows_subsystem = "windows"
 )]
 
-
+//Flow used to authenticating with twitch
 #[tauri::command]
 async fn twitch_auth_flow(app: AppHandle) -> String {
   //Build a new window to handle the auth flow
@@ -73,6 +73,31 @@ async fn twitch_auth_flow(app: AppHandle) -> String {
   return "failed_to_receive".to_string();
 }
 
+// Listens and records keypresses when user wants to change hotkey
+// TODO: needs its own thread
+#[tauri::command]
+fn listen_for_keys() {
+  let device_state = DeviceState::new();
+  let mut hotkey: Vec<String> = Vec::new();
+  loop {
+    let keys = device_state.get_keys(); //Polling
+    let final_pos = keys.len().saturating_sub(1);
+    if keys.len() > 0 {
+      let key_string = keys[final_pos].to_string();
+      if keys[final_pos].to_string().contains("Shift") {
+        if keys.len() > 1 {
+          for k in keys.iter() {
+            hotkey.push(k.to_string())
+          }
+          break;
+        }
+      }
+    }
+    println!("{:?}", keys);
+  }
+  println!("{:?}", hotkey);
+} 
+
 fn main() {
   tauri::Builder::default()
     .setup(|app| {
@@ -80,7 +105,7 @@ fn main() {
       window.open_devtools();
       Ok(())
     })
-    .invoke_handler(tauri::generate_handler![twitch_auth_flow])
+    .invoke_handler(tauri::generate_handler![twitch_auth_flow, listen_for_keys])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
