@@ -75,12 +75,13 @@ async fn twitch_auth_flow(app: AppHandle) -> String {
 
 // Listens and records keypresses when user wants to change hotkey
 // TODO: needs its own thread
+// TODO: needs to account for multiple utlity keys e.g. ctrl+shift
 #[tauri::command]
 fn listen_for_keys() {
   let device_state = DeviceState::new();
   let mut hotkey: Vec<String> = Vec::new();
   loop {
-    let keys = device_state.get_keys(); //Polling
+    let keys = device_state.get_keys(); 
     let final_pos = keys.len().saturating_sub(1);
     if keys.len() > 0 {
       let key_string = keys[final_pos].to_string();
