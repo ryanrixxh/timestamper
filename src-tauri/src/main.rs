@@ -5,7 +5,7 @@ use std::thread::sleep;
 use core::time::Duration;
 use std::cell::RefCell;
 use std::sync::{Arc, RwLock};
-use device_query::{DeviceQuery, DeviceState, Keycode};
+use device_query::{DeviceQuery, DeviceEvents, DeviceState, Keycode};
 mod navigate;
 
 const TWITCH_AUTH_URL: &str = concat!(
@@ -73,18 +73,20 @@ async fn twitch_auth_flow(app: AppHandle) -> String {
   return "failed_to_receive".to_string();
 }
 
-// Listens and records keypresses when user wants to change hotkey
-// TODO: needs its own thread
 #[tauri::command]
 fn listen_for_keys() -> String {
   let device_state = DeviceState::new();
   let mut hotkey_vec: Vec<String> = Vec::new();
   let util_keys = ["LControl", "LShift", "LAlt"];
+  let _guard = device_state.on_mouse_down(move |button| {}); //TODO: Find a way to set some kind of bool on mouse click
   loop {
     let keys = device_state.get_keys();
     if keys.len() > 0 {
       let latest_key = keys[0].to_string();
       let key_str = latest_key.as_str();
+      if key_str == "Escape" {
+        return String::from("Cancelled")
+      }
       if util_keys.contains(&key_str) == false {
         for k in keys.iter() {
           hotkey_vec.push(k.to_string());

@@ -15,6 +15,9 @@ function Home(props) {
   async function getShortcut() {
     await invoke('listen_for_keys').then((message) => {
       console.log(message)
+      if (message == 'Cancelled') {
+        return
+      }
       changeShortcut(message as string)
     })
   }
