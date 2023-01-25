@@ -4,23 +4,26 @@ import { User, Stream } from '../utils/interfaces'
 import { register } from '@tauri-apps/api/globalShortcut'
 import { invoke } from '@tauri-apps/api/tauri'
 
+
+
 function Home(props) {
   const [user, setUser] = useState<User>()
   const [stream, setStream] = useState<Stream>()
   const [hotkey, setHotkey] = useState<string>('Shift+C')
+  const [count, setCount] = useState(0)
 
   async function getShortcut() {
     await invoke('listen_for_keys').then((message) => {
       console.log(message)
-      setHotkey(message)
+      changeShortcut(message as string)
     })
   }
 
+  //TODO: Doesn't unregister old shortcut
   async function changeShortcut(newHotkey: string) {
     let hotkey = newHotkey
     await register(newHotkey, () => {
-      // This code runs when the hotkey is pressed
-      console.log('this should only run when pressed')
+      setCount(count => count + 1)
     })
     setHotkey(hotkey)
   }
@@ -92,6 +95,11 @@ function Home(props) {
         </h1>
         <button className="text-xl border" onClick={getShortcut}>Set Hotkey</button>
         <h2>Your hotkey is: {hotkey}</h2>
+
+        <h1 className="text-3xl font-bold mt-4">
+          Stats
+        </h1>
+        <h2>You have made {count} markers this stream!</h2>
       </div>
     </div>
   )
