@@ -78,34 +78,48 @@ async fn twitch_auth_flow(app: AppHandle) -> String {
 #[tauri::command]
 fn listen_for_keys() {
   let device_state = DeviceState::new();
-  let mut hotkey: Vec<String> = Vec::new();
+  let mut hotkey_vec: Vec<String> = Vec::new();
+  let util_keys = ["LControl", "LShift", "LAlt"];
+
   loop {
-    let keys = device_state.get_keys(); //Polling
-    let final_pos = keys.len().saturating_sub(1);
+    let keys = device_state.get_keys();
     if keys.len() > 0 {
-      let key_string = keys[final_pos].to_string();
-      if keys[final_pos].to_string().contains("Shift") {
-        if keys.len() > 1 {
-          for k in keys.iter() {
-            hotkey.push(k.to_string())
-          }
-          break;
+      let latest_key = keys[0].to_string();
+      let key_str = latest_key.as_str();
+      if util_keys.contains(&key_str) == false {
+        for k in keys.iter() {
+          hotkey_vec.push(k.to_string());
         }
+        break
       }
-    }
-    println!("{:?}", keys);
+    } 
   }
+
+  //Array conversion to string
+  let mut hotkey: String = String::from("");
+  for i in hotkey_vec.iter().rev() {
+    let current = i.as_str();
+    match current {
+      "LShift" | "RShift" => hotkey.push_str("Shift"),
+      "LAlt" | "RAlt" => hotkey.push_str("Alt"),
+      "LControl" | "RControl" => hotkey.push_str("CommandOrControl"),
+      _ => hotkey.push_str(i),
+    }
+    hotkey.push('+');
+  }
+  hotkey.pop();
   println!("{:?}", hotkey);
 } 
 
 fn main() {
-  tauri::Builder::default()
-    .setup(|app| {
-      let window = app.get_window("main").unwrap();
-      window.open_devtools();
-      Ok(())
-    })
-    .invoke_handler(tauri::generate_handler![twitch_auth_flow, listen_for_keys])
-    .run(tauri::generate_context!())
-    .expect("error while running tauri application");
+  listen_for_keys();
+  // tauri::Builder::default()
+  //   .setup(|app| {
+  //     let window = app.get_window("main").unwrap();
+  //     window.open_devtools();
+  //     Ok(())
+  //   })
+  //   .invoke_handler(tauri::generate_handler![twitch_auth_flow, listen_for_keys])
+  //   .run(tauri::generate_context!())
+  //   .expect("error while running tauri application");
 }
