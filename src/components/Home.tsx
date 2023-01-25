@@ -1,7 +1,7 @@
 import { useState, useEffect, useReducer } from 'react'
 import { createClient, getStreamData, getUserData, postEventSub } from '../utils/api'
 import { User, Stream } from '../utils/interfaces'
-import { register } from '@tauri-apps/api/globalShortcut'
+import { register, unregister } from '@tauri-apps/api/globalShortcut'
 import { invoke } from '@tauri-apps/api/tauri'
 
 
@@ -19,13 +19,15 @@ function Home(props) {
     })
   }
 
-  //TODO: Doesn't unregister old shortcut
   async function changeShortcut(newHotkey: string) {
-    let hotkey = newHotkey
+    await unregister(hotkey)
+
+    let current_hotkey = newHotkey
     await register(newHotkey, () => {
       setCount(count => count + 1)
     })
-    setHotkey(hotkey)
+
+    setHotkey(current_hotkey)
   }
 
   // Websocket to listen for changes in stream status
@@ -69,7 +71,6 @@ function Home(props) {
   useEffect(() => { 
     createClient(props.token)
     getUser()
-    changeShortcut('Shift+C')
   }, [])
 
   // When user value changes from undefined make a websocket connection
