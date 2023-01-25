@@ -1,23 +1,29 @@
-import './stylesheets/App.css'
-import Login from './components/Login'
-import Main from './components/Main'
+import { useState, useContext } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { emit, listen } from '@tauri-apps/api/event'
+import { invoke } from '@tauri-apps/api/tauri'
+import Login from './components/Login'
+import Home from './components/Home'
+
 
 function App() {
+  const [pageState, setPageState] = useState('Login')
+  const [authToken, setAuthToken] = useState('empty')
+
+
+  const sendToApp = (token: string) => {
+    if(token !== 'empty' && token.length > 0) {
+      setAuthToken(token)
+      setPageState('Home')
+    }
+  }
+  
   return (
-    <BrowserRouter>
-      <div className="App bg-neutral-500 h-screen">
-        <Routes>
-          <Route path='/' element={<Login />} />
-          <Route path='/logged' element={<><Main /></>} />
-        </Routes>
-        <div className="shoutout flex flex-wrap max-w-sm font-bold text-slate-300 text-center">
-            <p className="mr-1 text-xl">Made by</p>
-            <a className="text-xl text-violet-300 hover:text-violet-200" href="https://www.twitch.tv/futuuure_" target="_blank" rel="noopener noreferrer">twitch.tv/futuuure_</a>
-        </div>
-      </div>
-    </BrowserRouter>
-  );
+    <div>
+      { pageState === 'Login' && <Login sendToApp={sendToApp}/>}
+      { pageState === 'Home' && <Home token={authToken}/> }
+    </div>
+  )
 }
 
-export default App;
+export default App

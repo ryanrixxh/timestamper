@@ -11,5 +11,6 @@ export interface Stream {
     game_name?: string,
     title?: string,
     type?: string,
+    category_name?: string,
 }
 
