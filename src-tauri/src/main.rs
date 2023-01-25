@@ -80,7 +80,6 @@ fn listen_for_keys() -> String {
   let device_state = DeviceState::new();
   let mut hotkey_vec: Vec<String> = Vec::new();
   let util_keys = ["LControl", "LShift", "LAlt"];
-
   loop {
     let keys = device_state.get_keys();
     if keys.len() > 0 {

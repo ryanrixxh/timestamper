@@ -9,6 +9,13 @@ function Home(props) {
   const [stream, setStream] = useState<Stream>()
   const [hotkey, setHotkey] = useState<string>('Shift+C')
 
+  async function getShortcut() {
+    await invoke('listen_for_keys').then((message) => {
+      console.log(message)
+      setHotkey(message)
+    })
+  }
+
   async function changeShortcut(newHotkey: string) {
     let hotkey = newHotkey
     await register(newHotkey, () => {
@@ -83,7 +90,7 @@ function Home(props) {
         <h1 className="text-3xl font-bold mt-4">
           Marker Hotkeys
         </h1>
-        <button className="text-xl border" onClick={async () => {await invoke('listen_for_keys')}}>Set Hotkey</button>
+        <button className="text-xl border" onClick={getShortcut}>Set Hotkey</button>
         <h2>Your hotkey is: {hotkey}</h2>
       </div>
     </div>
