@@ -76,7 +76,7 @@ async fn twitch_auth_flow(app: AppHandle) -> String {
 // Listens and records keypresses when user wants to change hotkey
 // TODO: needs its own thread
 #[tauri::command]
-fn listen_for_keys() {
+fn listen_for_keys() -> String {
   let device_state = DeviceState::new();
   let mut hotkey_vec: Vec<String> = Vec::new();
   let util_keys = ["LControl", "LShift", "LAlt"];
@@ -108,18 +108,17 @@ fn listen_for_keys() {
     hotkey.push('+');
   }
   hotkey.pop();
-  println!("{:?}", hotkey);
+  return hotkey;
 } 
 
 fn main() {
-  listen_for_keys();
-  // tauri::Builder::default()
-  //   .setup(|app| {
-  //     let window = app.get_window("main").unwrap();
-  //     window.open_devtools();
-  //     Ok(())
-  //   })
-  //   .invoke_handler(tauri::generate_handler![twitch_auth_flow, listen_for_keys])
-  //   .run(tauri::generate_context!())
-  //   .expect("error while running tauri application");
+  tauri::Builder::default()
+    .setup(|app| {
+      let window = app.get_window("main").unwrap();
+      window.open_devtools();
+      Ok(())
+    })
+    .invoke_handler(tauri::generate_handler![twitch_auth_flow, listen_for_keys])
+    .run(tauri::generate_context!())
+    .expect("error while running tauri application");
 }
