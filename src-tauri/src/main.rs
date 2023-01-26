@@ -1,11 +1,9 @@
-use tauri::{Manager, AppHandle, Window};
+use tauri::{Manager, AppHandle};
 use url::Url;
-use std::thread;
 use std::thread::sleep;
 use core::time::Duration;
-use std::cell::RefCell;
 use std::sync::{Arc, RwLock};
-use device_query::{DeviceQuery, DeviceEvents, DeviceState, Keycode};
+use device_query::{DeviceQuery, DeviceEvents, DeviceState};
 mod navigate;
 
 const TWITCH_AUTH_URL: &str = concat!(
@@ -58,27 +56,23 @@ async fn twitch_auth_flow(app: AppHandle) -> String {
   navigate::webview_navigate(&window, auth).unwrap();
   
   //Wait for recieved token
-  let mut recieved = false;
-  while recieved == false {
+  loop {
     if let Ok(read_token) = token_read.read() {
       if *read_token != "empty" {
-        recieved = true;
-        window.close();
+        let _closed = window.close();
         return (*read_token.clone()).to_string().into();
       }
     }
     sleep(Duration::from_millis(500));
   }
-
-  return "failed_to_receive".to_string();
 }
 
 #[tauri::command]
 fn listen_for_keys() -> String {
   let device_state = DeviceState::new();
   let mut hotkey_vec: Vec<String> = Vec::new();
-  let util_keys = ["LControl", "LShift", "LAlt"];
-  let _guard = device_state.on_mouse_down(move |button| {}); //TODO: Find a way to set some kind of bool on mouse click
+  let util_keys = ["LControl", "LShift", "LAlt", "RControl", "RShift", "RAlt"];
+  let _guard = device_state.on_mouse_down(move |_button| {}); //TODO: Find a way to set some kind of bool on mouse click
   loop {
     let keys = device_state.get_keys();
     if keys.len() > 0 {

@@ -25,6 +25,13 @@ export async function getStreamData(id: any) {
   return response.data.data[0]
 }
 
+export async function postMarker(id: any) {
+  const request = '/streams/markers?user_id=' + id
+  const response = await client.post(request)
+  console.log(response)
+  return response
+}
+
 export async function postEventSub(body: any) {
   client.post('/eventsub/subscriptions', body)
 }
