@@ -14,6 +14,15 @@ const TWITCH_AUTH_URL: &str = concat!(
   "&scope=channel%3Amanage%3Abroadcast&state=1"
 );
 
+const TWITCH_AUTH_URL_FORCE: &str = concat!(
+  "https://id.twitch.tv/oauth2/authorize?",
+  "response_type=token",
+  "&client_id=v89m5cded20ey1ppxxsi5ni53c3rv0",
+  "&redirect_uri=https://timestamper/logged",
+  "&scope=channel%3Amanage%3Abroadcast&state=1",
+  "&force_verify=true",
+);
+
 const TWITCH_REDIRECT_URL: &str = "https://timestamper/logged";
 
 #[derive(Clone, serde::Serialize)]
@@ -28,7 +37,8 @@ struct Payload {
 
 //Flow used to authenticating with twitch
 #[tauri::command]
-async fn twitch_auth_flow(app: AppHandle) -> String {
+async fn twitch_auth_flow(app: AppHandle, logged: bool) -> String {
+  println!("{}", logged);
   //Build a new window to handle the auth flow
   let token = Arc::new(RwLock::new("empty".to_string()));
   let token_clone = token.clone();
@@ -53,7 +63,12 @@ async fn twitch_auth_flow(app: AppHandle) -> String {
 
   
   //Navigate to auth url
-  let auth = Url::parse(TWITCH_AUTH_URL).unwrap();
+  let auth;
+  if logged == true {
+    auth = Url::parse(TWITCH_AUTH_URL).unwrap();
+  } else {
+    auth = Url::parse(TWITCH_AUTH_URL_FORCE).unwrap();
+  }
   navigate::webview_navigate(&window, auth).unwrap();
   
   //Wait for recieved token
