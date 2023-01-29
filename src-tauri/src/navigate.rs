@@ -1,7 +1,7 @@
 // Navigation code reference: https://gist.github.com/silvanshade/16df59ab6c3ad61a3825f1b9670cff11
 
 use url::Url;
-use tauri::{Manager, AppHandle, Window};
+use tauri::{Window};
 
 pub type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 pub type BoxResult<T> = Result<T, BoxError>;

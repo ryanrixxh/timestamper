@@ -4,6 +4,7 @@ import { emit, listen } from '@tauri-apps/api/event'
 import { invoke } from '@tauri-apps/api/tauri'
 import Login from './components/Login'
 import Home from './components/Home'
+import { validateToken } from './utils/api'
 
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
 
 
   const sendToApp = (token: string) => {
+    validateToken(token)
     if(token !== 'empty' && token.length > 0) {
       setAuthToken(token)
       setPageState('Home')

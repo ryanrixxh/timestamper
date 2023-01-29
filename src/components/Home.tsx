@@ -1,15 +1,15 @@
 import { useState, useEffect, useReducer } from 'react'
-import { createClient, getStreamData, getUserData, postEventSub } from '../utils/api'
+import { createClient, getStreamData, getUserData, postEventSub, postMarker } from '../utils/api'
 import { User, Stream } from '../utils/interfaces'
 import { register, unregister } from '@tauri-apps/api/globalShortcut'
 import { invoke } from '@tauri-apps/api/tauri'
 
-
+// TODO: Split content of home into several components
 
 function Home(props) {
   const [user, setUser] = useState<User>()
   const [stream, setStream] = useState<Stream>()
-  const [hotkey, setHotkey] = useState<string>('Shift+C')
+  const [hotkey, setHotkey] = useState<string>('')
   const [count, setCount] = useState(0)
 
   async function getShortcut() {
@@ -27,6 +27,7 @@ function Home(props) {
 
     let current_hotkey = newHotkey
     await register(newHotkey, () => {
+      postMarker(user?.id)
       setCount(count => count + 1)
     })
 
