@@ -26,6 +26,21 @@ export async function validateToken(token_input) {
   return response
 }
 
+export async function revokeToken(token_input) {
+  const options = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    data: {
+      'client_id': 'v89m5cded20ey1ppxxsi5ni53c3rv0',
+      'token': token_input
+    }
+  }
+
+  const response = await axios.post('https://id.twitch.tv/oauth2/revoke')
+  console.log(response)
+}
+
 // Gets user details (namely id) for other requests to use
 export async function getUserData() {
   const response = await client.get('/users')
