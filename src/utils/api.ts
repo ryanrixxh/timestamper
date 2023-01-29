@@ -14,17 +14,32 @@ export function createClient(token_input) {
   })
 }
 
+// Checks that the token is valid
+export async function validateToken(token_input) {
+  const options = {
+    headers: {
+      'Authorization': 'Bearer ' + token_input
+    }
+  } 
+  const response = await axios.get("https://id.twitch.tv/oauth2/validate", options)
+  console.log(response)
+  return response
+}
+
+// Gets user details (namely id) for other requests to use
 export async function getUserData() {
   const response = await client.get('/users')
   return response.data.data[0]
 }
 
+// Get stream information (title, catagory etc.)
 export async function getStreamData(id: any) {
   const request = '/channels?broadcaster_id=' + id
   const response = await client.get(request)
   return response.data.data[0]
 }
 
+// Post request to create a marker
 export async function postMarker(id: any) {
   const request = '/streams/markers?user_id=' + id
   const response = await client.post(request)
@@ -32,6 +47,8 @@ export async function postMarker(id: any) {
   return response
 }
 
+
+// Post request to determine which websocket event to subscribe to
 export async function postEventSub(body: any) {
   client.post('/eventsub/subscriptions', body)
 }

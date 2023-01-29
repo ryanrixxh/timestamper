@@ -13,6 +13,7 @@ const TWITCH_AUTH_URL: &str = concat!(
   "&redirect_uri=https://timestamper/logged",
   "&scope=channel%3Amanage%3Abroadcast&state=1"
 );
+
 const TWITCH_REDIRECT_URL: &str = "https://timestamper/logged";
 
 #[derive(Clone, serde::Serialize)]
