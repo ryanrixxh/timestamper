@@ -11,7 +11,7 @@ function App() {
   const [pageState, setPageState] = useState('Login')
   const [authToken, setAuthToken] = useState('empty')
 
-
+  import.meta.env.VITE_LOGGED = false
   const sendToApp = (token: string) => {
     validateToken(token)
     if(token !== 'empty' && token.length > 0) {

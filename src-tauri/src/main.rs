@@ -114,6 +114,7 @@ fn main() {
       window.open_devtools();
       Ok(())
     })
+    .plugin(tauri_plugin_store::Builder::default().build())
     .invoke_handler(tauri::generate_handler![twitch_auth_flow, listen_for_keys])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
