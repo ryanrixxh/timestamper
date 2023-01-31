@@ -1,10 +1,8 @@
 import { useState, useContext } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { emit, listen } from '@tauri-apps/api/event'
-import { invoke } from '@tauri-apps/api/tauri'
+import { appWindow } from '@tauri-apps/api/window'
 import Login from './components/Login'
 import Home from './components/Home'
-import { validateToken } from './utils/api'
+import { validateToken, revokeToken } from './utils/api'
 
 
 function App() {

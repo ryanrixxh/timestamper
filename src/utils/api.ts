@@ -37,7 +37,7 @@ export async function revokeToken(token_input) {
     }
   }
 
-  const response = await axios.post('https://id.twitch.tv/oauth2/revoke')
+  const response = await axios.post('https://id.twitch.tv/oauth2/revoke', options)
   console.log(response)
 }
 

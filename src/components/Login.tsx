@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
-import { emit, listen } from '@tauri-apps/api/event'
 import { invoke } from '@tauri-apps/api/tauri'
+import { appWindow } from '@tauri-apps/api/window'
 import { Store } from 'tauri-plugin-store-api'
 import { v } from '@tauri-apps/api/event-2a9960e7'
 
 async function setLogged(store: Store) {
   await store.set('logged', { value: false})
 }
+
 
 
 function Login({ sendToApp }) {
@@ -22,7 +23,6 @@ function Login({ sendToApp }) {
       sendToApp(message as any)
     })
   } 
-
 
   return (
     <div className="App">

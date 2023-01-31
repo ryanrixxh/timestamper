@@ -1,4 +1,4 @@
-use tauri::{Manager, AppHandle};
+use tauri::{Manager, AppHandle, RunEvent};
 use url::Url;
 use std::thread::sleep;
 use core::time::Duration;
@@ -131,7 +131,14 @@ fn main() {
     })
     .plugin(tauri_plugin_store::Builder::default().build())
     .invoke_handler(tauri::generate_handler![twitch_auth_flow, listen_for_keys])
-    .run(tauri::generate_context!())
-    .expect("error while running tauri application");
+    .build(tauri::generate_context!())
+    .expect("error while running tauri application")
+    .run(|_app, event| match event { //TODO: Use this event listener to revoke token when an exit request occurs
+      RunEvent::ExitRequested { .. } => {
+        println!("{:?}", event);
+      }
+      _ => {}
+    });
+
 
 }
