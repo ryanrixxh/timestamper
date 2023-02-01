@@ -1,5 +1,6 @@
 use tauri::{Manager, AppHandle, RunEvent};
-use tauri::api::http::{HttpRequestBuilder, ResponseType, ClientBuilder};
+use tauri::api::http::{HttpRequestBuilder, ClientBuilder, Body};
+use futures::executor::block_on;
 use url::Url;
 use std::thread::sleep;
 use core::time::Duration;
@@ -42,6 +43,7 @@ struct Payload {
 )]
 
 //Flow used to authenticating with twitch
+
 #[tauri::command]
 async fn twitch_auth_flow(app: AppHandle, logged: bool) -> String {
   println!("{}", logged);
@@ -92,6 +94,8 @@ async fn twitch_auth_flow(app: AppHandle, logged: bool) -> String {
   }
 }
 
+// Listens for all keypresses and sets a new hotkey when a key is found
+
 #[tauri::command]
 fn listen_for_keys() -> String {
   let device_state = DeviceState::new();
@@ -132,13 +136,30 @@ fn listen_for_keys() -> String {
 } 
 
 //Sends the request to revoke the current access token upon ExitRequested
+
 async fn revoke_token(token: String) {
+  let body_string = format!("client_id=v89m5cded20ey1ppxxsi5ni53c3rv0&token={}", token);
   let client = ClientBuilder::new().build().unwrap();
+  let body: Body = Body::Text(body_string); //TODO: Woohoo it worked! Maybe clean this up a bit though
   // TODO: Complete this post request.
-  // let request = HttpRequestBuilder::new("POST", "https://id.twitch.tv/oauth2/revoke");
+  let request: HttpRequestBuilder = HttpRequestBuilder::new("POST", "https://id.twitch.tv/oauth2/revoke")
+      .unwrap()
+      .body(body)
+      .header("Content-Type", "application/x-www-form-urlencoded")
+      .unwrap();
+
+  if let Ok(_) = client.send(request).await {
+    println!("got response");
+  } else {
+    println!("request bad");
+  }
+
 }
 
+
 fn main() {
+  let future = revoke_token(String::from("exampleT0ken"));
+  block_on(future);
   tauri::Builder::default()
     .setup(|app| {
       let window = app.get_window("main").unwrap();
