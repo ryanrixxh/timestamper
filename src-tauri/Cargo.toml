@@ -23,6 +23,7 @@ url = "2.3.1"
 oneshot = "0.1.5"
 wry = "0.24.1"
 device_query = "1.1.2"
+lazy_static = "1.4.0"
 
 [features]
 # by default Tauri runs in production mode

@@ -1,10 +1,16 @@
 use tauri::{Manager, AppHandle, RunEvent};
+use tauri::api::http::{HttpRequestBuilder, ResponseType, ClientBuilder};
 use url::Url;
 use std::thread::sleep;
 use core::time::Duration;
-use std::sync::{Arc, RwLock};
+use std::sync::{Arc, RwLock, Mutex};
+use lazy_static::lazy_static;
 use device_query::{DeviceQuery, DeviceEvents, DeviceState};
 mod navigate;
+
+lazy_static! {
+  static ref TOKEN: Mutex<String> = Mutex::new(String::from(""));
+}
 
 const TWITCH_AUTH_URL: &str = concat!(
   "https://id.twitch.tv/oauth2/authorize?",
@@ -76,6 +82,9 @@ async fn twitch_auth_flow(app: AppHandle, logged: bool) -> String {
     if let Ok(read_token) = token_read.read() {
       if *read_token != "empty" {
         let _closed = window.close();
+        let mut token_guard = TOKEN.lock().unwrap();
+        *token_guard = (*read_token.clone()).to_string().into();
+        drop(token_guard);
         return (*read_token.clone()).to_string().into();
       }
     }
@@ -122,6 +131,13 @@ fn listen_for_keys() -> String {
   return hotkey;
 } 
 
+//Sends the request to revoke the current access token upon ExitRequested
+async fn revoke_token(token: String) {
+  let client = ClientBuilder::new().build().unwrap();
+  // TODO: Complete this post request.
+  // let request = HttpRequestBuilder::new("POST", "https://id.twitch.tv/oauth2/revoke");
+}
+
 fn main() {
   tauri::Builder::default()
     .setup(|app| {
@@ -139,6 +155,4 @@ fn main() {
       }
       _ => {}
     });
-
-
 }
