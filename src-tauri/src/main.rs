@@ -98,11 +98,25 @@ async fn twitch_auth_flow(app: AppHandle, logged: bool) -> String {
 
 #[tauri::command]
 fn listen_for_keys() -> String {
+  let cancelled = Arc::new(Mutex::new(false));
   let device_state = DeviceState::new();
   let mut hotkey_vec: Vec<String> = Vec::new();
   let util_keys = ["LControl", "LShift", "LAlt", "RControl", "RShift", "RAlt"];
-  let _guard = device_state.on_mouse_down(move |_button| {}); //TODO: Find a way to set some kind of bool on mouse click
+  
+  let lock_click = Arc::clone(&cancelled);
+  let _guard = device_state.on_mouse_down(move |_button| {
+    let mut cancel_writer = lock_click.lock().unwrap();
+    *cancel_writer = true;
+  });
+  
+  //TODO: Find a way to set some kind of bool on mouse click
+  let lock_loop = Arc::clone(&cancelled);
   loop {
+    let cancel_reader = lock_loop.lock().unwrap();
+    if *cancel_reader == true {
+      println!("{}", *cancel_reader);
+      return String::from("Cancelled");
+    }
     let keys = device_state.get_keys();
     if keys.len() > 0 {
       let latest_key = keys[0].to_string();
