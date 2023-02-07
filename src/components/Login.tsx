@@ -4,24 +4,26 @@ import { appWindow } from '@tauri-apps/api/window'
 import { Store } from 'tauri-plugin-store-api'
 import { v } from '@tauri-apps/api/event-2a9960e7'
 
-async function setLogged(store: Store) {
-  await store.set('logged', { value: false})
+async function setLoggedTrue(store: Store) {
+  await store.set('logged', { value: true})
 }
 
 
 
-function Login({ sendToApp }) {
-  const store = new Store(".settings.dat")
+function Login(props) {
 
   const [token, setToken] = useState("empty")
 
   async function auth() {
+    const store = new Store(".settings.dat")
     const val: any = await store.get('logged')
     const status: Boolean = val.value
     await invoke('twitch_auth_flow', {logged: status}).then((message) => {
       setToken(message as any)
-      sendToApp(message as any)
+      props.loginMessage(message as any)
     })
+    //TODO: Needs a check to see if the auth actually succeeds
+    setLoggedTrue(store)
   } 
 
   return (

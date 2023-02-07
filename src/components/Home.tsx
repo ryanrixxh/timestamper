@@ -3,14 +3,26 @@ import { createClient, getStreamData, getUserData, postEventSub, postMarker } fr
 import { User, Stream } from '../utils/interfaces'
 import { register, unregister } from '@tauri-apps/api/globalShortcut'
 import { invoke } from '@tauri-apps/api/tauri'
+import { Store } from 'tauri-plugin-store-api'
 
 // TODO: Split content of home into several components
+async function setLogged(store: Store, logStatus: Boolean) {
+  await store.set('logged', { value: logStatus})
+}
+
 
 function Home(props) {
   const [user, setUser] = useState<User>()
   const [stream, setStream] = useState<Stream>()
   const [hotkey, setHotkey] = useState<string>('')
   const [count, setCount] = useState(0)
+
+  async function logout() {
+    const store = new Store(".settings.dat")
+    setLogged(store, false)
+    props.loginMessage("logged out")
+    // TODO: Needs to navigate back to login page by emitting something to App component
+  } 
 
   async function getShortcut() {
     await invoke('listen_for_keys').then((message) => {
@@ -105,6 +117,8 @@ function Home(props) {
           Stats
         </h1>
         <h2>You have made {count} markers this stream!</h2>
+
+        <button className="text-xl border" onClick={logout}>Logout</button>
       </div>
     </div>
   )
