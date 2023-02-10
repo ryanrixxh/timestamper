@@ -10,15 +10,23 @@ async function setLogged(store: Store, logStatus: Boolean) {
   await store.set('logged', { value: logStatus})
 }
 
+async function saveHotkey(store: Store, hotkey: String) {
+  await store.set('hotkey', { value: hotkey})
+}
+
 
 function Home(props) {
+
+  // Store keeps persisent data
+  const store = new Store(".settings.dat")
+
   const [user, setUser] = useState<User>()
   const [stream, setStream] = useState<Stream>()
   const [hotkey, setHotkey] = useState<string>('')
   const [count, setCount] = useState(0)
 
+
   async function logout() {
-    const store = new Store(".settings.dat")
     setLogged(store, false)
     props.loginMessage("logged out")
   } 
@@ -43,6 +51,14 @@ function Home(props) {
     })
 
     setHotkey(current_hotkey)
+    saveHotkey(store, current_hotkey)
+  }
+
+  //Loads the shortcut from the store
+  async function loadShortcut() {
+    const val: any = await store.get('hotkey')
+    const savedHotkey: string = (val.value !== null) ? val.value : ''
+    setHotkey(savedHotkey)
   }
 
   // Websocket to listen for changes in stream status
@@ -85,6 +101,7 @@ function Home(props) {
   useEffect(() => { 
     createClient(props.token)
     getUser()
+    loadShortcut()
   }, [])
 
   // When user value changes from undefined make a websocket connection
@@ -115,7 +132,6 @@ function Home(props) {
           Stats
         </h1>
         <h2>You have made {count} markers this stream!</h2>
-
         <button className="text-xl border" onClick={logout}>Logout</button>
       </div>
     </div>
