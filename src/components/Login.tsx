@@ -1,14 +1,10 @@
 import { useState, useEffect } from 'react'
 import { invoke } from '@tauri-apps/api/tauri'
-import { appWindow } from '@tauri-apps/api/window'
 import { Store } from 'tauri-plugin-store-api'
-import { v } from '@tauri-apps/api/event-2a9960e7'
 
 async function setLoggedTrue(store: Store) {
   await store.set('logged', { value: true})
 }
-
-
 
 function Login(props) {
 

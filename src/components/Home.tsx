@@ -21,7 +21,6 @@ function Home(props) {
     const store = new Store(".settings.dat")
     setLogged(store, false)
     props.loginMessage("logged out")
-    // TODO: Needs to navigate back to login page by emitting something to App component
   } 
 
   async function getShortcut() {
@@ -60,7 +59,6 @@ function Home(props) {
   async function createWebsocket(id: string, eventType: string) {
     let ws_id
     const socket = new WebSocket('wss://eventsub-beta.wss.twitch.tv/ws')
-    //needs a check to see if the message is a welcome or subscription message
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data)
       if (message.metadata.message_type === 'session_welcome') {

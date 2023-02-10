@@ -156,16 +156,14 @@ fn listen_for_keys() -> String {
 async fn revoke_token(token: String) {
   let body_string = format!("client_id=v89m5cded20ey1ppxxsi5ni53c3rv0&token={}", token);
   let client = ClientBuilder::new().build().unwrap();
-  let body: Body = Body::Text(body_string); //TODO: Woohoo it worked! Maybe clean this up a bit though
-  // TODO: Complete this post request.
+  let body: Body = Body::Text(body_string); 
   let request: HttpRequestBuilder = HttpRequestBuilder::new("POST", "https://id.twitch.tv/oauth2/revoke")
       .unwrap()
       .body(body)
       .header("Content-Type", "application/x-www-form-urlencoded")
       .unwrap();
-
-  if let Ok(_) = client.send(request).await {
-    println!("got response");
+  if let Ok(response) = client.send(request).await {
+    println!("{:?}", response);
   } else {
     println!("request bad");
   }
@@ -174,8 +172,6 @@ async fn revoke_token(token: String) {
 
 
 fn main() {
-  let future = revoke_token(String::from("exampleT0ken"));
-  block_on(future);
   tauri::Builder::default()
     .setup(|app| {
       let window = app.get_window("main").unwrap();
@@ -189,6 +185,9 @@ fn main() {
     .run(|_app, event| match event { //TODO: Use this event listener to revoke token when an exit request occurs
       RunEvent::ExitRequested { .. } => {
         println!("{:?}", event);
+        let exit_token_guard = TOKEN.lock().unwrap();
+        let future = revoke_token((*exit_token_guard.clone()).to_string());
+        block_on(future);
       }
       _ => {}
     });
