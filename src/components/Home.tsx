@@ -4,6 +4,7 @@ import { User, Stream } from '../utils/interfaces'
 import { register, unregister } from '@tauri-apps/api/globalShortcut'
 import { invoke } from '@tauri-apps/api/tauri'
 import { Store } from 'tauri-plugin-store-api'
+import Info from './Info'
 
 // TODO: Split content of home into several components
 async function setLogged(store: Store, logStatus: Boolean) {
@@ -116,12 +117,10 @@ function Home(props) {
   return (
     <div className="App">
       <div className="card">
-        <h1 className="text-3xl font-bold">
-          Hello {user?.display_name}
-        </h1>
-        <h2> {stream?.game_name} </h2>
-        <h2> {stream?.title} </h2>
-
+        <Info display_name={user?.display_name} 
+              game_name={stream?.game_name} 
+              title={stream?.title}/>
+        
         <h1 className="text-3xl font-bold mt-4">
           Marker Hotkeys
         </h1>
