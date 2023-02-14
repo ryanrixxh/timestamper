@@ -4,6 +4,9 @@ import { register, unregister } from '@tauri-apps/api/globalShortcut'
 import { postMarker } from "../utils/api"
 import { Store } from 'tauri-plugin-store-api'
 
+
+//TODO: Needs two components MarkerPoster and MarkerWriter that conditionally render
+//      depending on whether or not the user is logged in
 async function saveHotkey(store: Store, hotkey: String) {
     await store.set('hotkey', { value: hotkey})
   }
@@ -25,6 +28,9 @@ function Marker(props) {
     async function changeShortcut(newHotkey: string) {
     await unregister(hotkey)
 
+    //TODO: Actually maybe the conditional can just be here. 
+    //      If user is logged in then postMarker if not then dont
+    //      If user has selected write option then write to filesystem (needs a rust function)
     let current_hotkey = newHotkey
     await register(newHotkey, () => {
         postMarker(props.user_id)

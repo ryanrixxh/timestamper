@@ -85,8 +85,9 @@ function Home(props) {
               game_name={stream?.game_name} 
               title={stream?.title}/>
         
-        <Marker user_id={user?.id} store={store}/>
-
+        <Marker user_id={user?.id} 
+                store={store}/>
+          
         <button className="text-xl border" onClick={logout}>Logout</button>
       </div>
     </div>
