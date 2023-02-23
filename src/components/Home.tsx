@@ -17,10 +17,8 @@ function Home(props) {
 
   // Store keeps persisent data
   const store = new Store(".settings.dat")
-
   const [user, setUser] = useState<User>()
   const [stream, setStream] = useState<Stream>()
-
 
   async function logout() {
     setLogged(store, false)
@@ -80,16 +78,12 @@ function Home(props) {
   
   return (
     <div className="App">
-      <div className="card">
-        <Info display_name={user?.display_name} 
-              game_name={stream?.game_name} 
-              title={stream?.title}/>
-        
-        <Marker user_id={user?.id} 
-                store={store}/>
-          
+        {props.online === true && <Info display_name={user?.display_name} 
+                                        game_name={stream?.game_name} 
+                                        title={stream?.title}/>  }
+
+        <Marker user_id={user?.id} store={store} online={props.online}/>
         <button className="text-xl border" onClick={logout}>Logout</button>
-      </div>
     </div>
   )
 }

@@ -16,15 +16,21 @@ function App() {
 
 
   import.meta.env.VITE_LOGGED = false
-  const loginMessage = (token: string) => {
+  let online: boolean
+  
+  const loginMessage = (message: string) => {
     getStatus()
-    console.log(token)
-    if(token == 'logged out') {
+    if(message == 'logged out') {
       setPageState('Login')
       revokeToken(authToken)
-    } else if(token !== 'logged out' && token.length > 0) {
+    } else if(message == 'offline') {
+      setPageState('Home')
+      online = false
+    } else if(message !== 'logged out' && message.length > 0) {
+        let token = message
         validateToken(token)
         setAuthToken(token)
+        online = true
         setPageState('Home')
     }
   }
@@ -32,7 +38,7 @@ function App() {
   return (
     <div>
       { pageState === 'Login' && <Login loginMessage={loginMessage}/>}
-      { pageState === 'Home' && <Home token={authToken} loginMessage={loginMessage}/> }
+      { pageState === 'Home' && <Home token={authToken} loginMessage={loginMessage} online={online}/> }
     </div>
   )
 }

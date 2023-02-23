@@ -46,7 +46,6 @@ struct Payload {
 
 #[tauri::command]
 async fn twitch_auth_flow(app: AppHandle, logged: bool) -> String {
-  println!("{}", logged);
   //Build a new window to handle the auth flow
   let token = Arc::new(RwLock::new("empty".to_string()));
   let token_clone = token.clone();
