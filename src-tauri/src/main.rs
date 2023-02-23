@@ -110,7 +110,6 @@ fn listen_for_keys() -> String {
     *cancel_writer = true;
   });
   
-  //TODO: Find a way to set some kind of bool on mouse click
   let lock_loop = Arc::clone(&cancelled);
   loop {
     let cancel_reader = lock_loop.lock().unwrap();
@@ -181,7 +180,7 @@ fn main() {
     .invoke_handler(tauri::generate_handler![twitch_auth_flow, listen_for_keys])
     .build(tauri::generate_context!())
     .expect("error while running tauri application")
-    .run(|_app, event| match event { //TODO: Use this event listener to revoke token when an exit request occurs
+    .run(|_app, event| match event { 
       RunEvent::ExitRequested { .. } => {
         println!("{:?}", event);
         let exit_token_guard = TOKEN.lock().unwrap();
