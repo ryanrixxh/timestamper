@@ -4,6 +4,7 @@ import { register, unregister } from '@tauri-apps/api/globalShortcut'
 import {writeTextFile, BaseDirectory, exists, createDir } from '@tauri-apps/api/fs'
 import { postMarker } from "../utils/api"
 import { Store } from 'tauri-plugin-store-api'
+import _ from 'lodash'
 
 
 async function saveHotkey(store: Store, hotkey: String) {
@@ -20,7 +21,7 @@ async function checkForFolder() {
 }
 
 function Marker(props) {
-    const [hotkey, setHotkey] = useState<string>('')
+    const [hotkey, setHotkey] = useState<string>('start')
     const [count, setCount] = useState(0)
     const [manualTime, setManualTime] = useState({seconds: 0, minutes: 0, hours: 0})
     const timestamps: string[] = []
@@ -31,17 +32,18 @@ function Marker(props) {
     }
     
     //TODO: invoke a rust filesystem writing function
-    async function writeMarkerToFs() {
-        const newTimestamp: string = manualTime.hours + ':' + manualTime.minutes + ':' + manualTime.seconds
-        timestamps.push(newTimestamp)
-        console.log(timestamps)
+    const writeMarkerToFs = async () => {
+        console.log(manualTime)
+        // console.log(timestamps)
+        _.forEach(timestamps, (index) => {
+            console.log(index)
+        })
         await writeTextFile('timestamps/timestamps.txt', 'text', {dir: BaseDirectory.AppLocalData})
     }
 
     //Invokes rust keyboard listener
     async function getShortcut() {
         await invoke('listen_for_keys').then((message) => {
-          console.log(message)
           if (message == 'Cancelled') {
             return
           }
@@ -55,10 +57,10 @@ function Marker(props) {
 
     // This logic is ran when the hotkey is pressed
     await register(newHotkey, async () => {
+        //TODO: register needs to trigger hooks by updating count rather than do thing itself
         if (props.online === true) {
             postMarker(props.user_id)
         }
-        await writeMarkerToFs()
         setCount(count => count + 1)
     })
 
@@ -70,7 +72,6 @@ function Marker(props) {
     async function loadShortcut() {
         const val: any = await props.store.get('hotkey')
         const savedHotkey: string = (val.value !== null) ? val.value : ''
-        console.log('setting hotkey', savedHotkey)
         setHotkey(savedHotkey)
         changeShortcut(savedHotkey)
     }
@@ -81,23 +82,31 @@ function Marker(props) {
         checkForFolder()
     }, [])
 
+    //Whenever the count is updated, trigger the creation of a timestamp
+    useEffect(() => {
+        writeMarkerToFs()
+    }, [count])
+
     //TODO: The interval of this timer needs to start on a button press, not first load
     useEffect(() => {
-        const seconds_id = setInterval(() => setManualTime(manualTime => ({...manualTime, seconds: manualTime.seconds++})), 1000)
+        const seconds_id = setInterval(() => {
+            setManualTime(manualTime => ({...manualTime, seconds: manualTime.seconds++}))
+        }, 1000)
         return () => {
             clearInterval(seconds_id)
         }
     }, [])
     useEffect(() => {
         if (manualTime.seconds === 59) {
-            manualTime.seconds = -1
-            manualTime.minutes++
+            setManualTime(manualTime => ({...manualTime, seconds: manualTime.seconds = 0}))
+            setManualTime(manualTime => ({...manualTime, minutes: ++manualTime.minutes}))
         }
         if (manualTime.minutes === 59) {
-            manualTime.minutes = -1
-            manualTime.hours
+            setManualTime(manualTime => ({...manualTime, minutes: manualTime.minutes = 0}))
+            setManualTime(manualTime => ({...manualTime, hours: ++manualTime.hours}))
         }
-    }, [manualTime.seconds, manualTime.minutes])
+
+    }, [manualTime.seconds, manualTime.minutes, hotkey])
 
     return(
         <div>
@@ -112,6 +121,7 @@ function Marker(props) {
             </h1>
             <h2>You have made {count} markers this stream!</h2>
             <h2>Manual Timer: {manualTime.hours}:{manualTime.minutes}:{manualTime.seconds}</h2>
+            <button onClick={writeMarkerToFs}>Click</button>
         </div>
     ) 
 }
