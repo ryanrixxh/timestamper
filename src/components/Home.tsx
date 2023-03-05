@@ -7,14 +7,13 @@ import { Store } from 'tauri-plugin-store-api'
 import Info from './Info'
 import Marker from './Marker'
 
-// TODO: Split content of home into several components
+
 async function setLogged(store: Store, logStatus: Boolean) {
   await store.set('logged', { value: logStatus})
 }
 
 
 function Home(props) {
-
   // Store keeps persisent data
   const store = new Store(".settings.dat")
   const [user, setUser] = useState<User>()
@@ -63,8 +62,10 @@ function Home(props) {
   }
 
   useEffect(() => { 
-    createClient(props.token)
-    getUser()
+    if (props.online) {
+      createClient(props.token)
+      getUser()
+    }
   }, [])
 
   // When user value changes from undefined make a websocket connection

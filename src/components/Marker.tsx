@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { invoke } from '@tauri-apps/api/tauri'
 import { register, unregister } from '@tauri-apps/api/globalShortcut'
-import {writeTextFile, BaseDirectory } from '@tauri-apps/api/fs'
+import {writeTextFile, BaseDirectory, exists } from '@tauri-apps/api/fs'
 import { postMarker } from "../utils/api"
 import { Store } from 'tauri-plugin-store-api'
 
@@ -12,7 +12,8 @@ async function saveHotkey(store: Store, hotkey: String) {
 
 //TODO: invoke a rust filesystem writing function
 async function writeMarkerToFs() {
-    await writeTextFile('timestampsfromtauri.txt' , 'this is some text', {dir: BaseDirectory.Document})
+    const dirNeeded = await exists('timestamps', { dir: BaseDirectory.AppData})
+    console.log(dirNeeded)
 }
 
 function Marker(props) {
@@ -42,9 +43,11 @@ function Marker(props) {
 
     // This logic is ran when the hotkey is pressed
     await register(newHotkey, async () => {
-        postMarker(props.user_id)
-        setCount(count => count + 1)
+        if (props.online === true) {
+            postMarker(props.user_id)
+        }
         await writeMarkerToFs()
+        setCount(count => count + 1)
     })
 
     setHotkey(current_hotkey)
@@ -60,12 +63,12 @@ function Marker(props) {
         changeShortcut(savedHotkey)
     }
 
-    //Mounted
+    //Load the shortcut on first page load
     useEffect(() => {
         loadShortcut()
     }, [])
 
-
+    //TODO: The interval of this timer needs to start on a button press, not first load
     useEffect(() => {
         const seconds_id = setInterval(() => setManualTime(manualTime => ({...manualTime, seconds: manualTime.seconds++})), 1000)
         return () => {

@@ -94,7 +94,6 @@ async fn twitch_auth_flow(app: AppHandle, logged: bool) -> String {
 }
 
 // Listens for all keypresses and sets a new hotkey when a key is found
-
 #[tauri::command]
 fn listen_for_keys() -> String {
   let device_state = DeviceState::new();
@@ -149,8 +148,7 @@ fn listen_for_keys() -> String {
   return hotkey;
 } 
 
-//Sends the request to revoke the current access token upon ExitRequested
-
+//Sends the request to revoke the current access token
 async fn revoke_token(token: String) {
   let body_string = format!("client_id=v89m5cded20ey1ppxxsi5ni53c3rv0&token={}", token);
   let client = ClientBuilder::new().build().unwrap();
