@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { invoke } from '@tauri-apps/api/tauri'
 import { register, unregister } from '@tauri-apps/api/globalShortcut'
-import {writeTextFile, BaseDirectory, exists } from '@tauri-apps/api/fs'
+import {writeTextFile, BaseDirectory, exists, createDir } from '@tauri-apps/api/fs'
 import { postMarker } from "../utils/api"
 import { Store } from 'tauri-plugin-store-api'
 
@@ -10,20 +10,32 @@ async function saveHotkey(store: Store, hotkey: String) {
     await store.set('hotkey', { value: hotkey})
 }
 
-//TODO: invoke a rust filesystem writing function
-async function writeMarkerToFs() {
-    const dirNeeded = await exists('timestamps', { dir: BaseDirectory.AppData})
-    console.log(dirNeeded)
+
+//Checks local AppData for a timestamps folder
+async function checkForFolder() {
+    const dirExists = await exists('timestamps', { dir: BaseDirectory.AppLocalData})
+    if (dirExists === false) {
+        await createDir('timestamps', {dir: BaseDirectory.AppLocalData, recursive: true})
+    }
 }
 
 function Marker(props) {
     const [hotkey, setHotkey] = useState<string>('')
     const [count, setCount] = useState(0)
     const [manualTime, setManualTime] = useState({seconds: 0, minutes: 0, hours: 0})
+    const timestamps: string[] = []
 
-    //Tracks the manual time
+    //TODO: Needs to track the manual time
     function startTimer() {
         
+    }
+    
+    //TODO: invoke a rust filesystem writing function
+    async function writeMarkerToFs() {
+        const newTimestamp: string = manualTime.hours + ':' + manualTime.minutes + ':' + manualTime.seconds
+        timestamps.push(newTimestamp)
+        console.log(timestamps)
+        await writeTextFile('timestamps/timestamps.txt', 'text', {dir: BaseDirectory.AppLocalData})
     }
 
     //Invokes rust keyboard listener
@@ -66,6 +78,7 @@ function Marker(props) {
     //Load the shortcut on first page load
     useEffect(() => {
         loadShortcut()
+        checkForFolder()
     }, [])
 
     //TODO: The interval of this timer needs to start on a button press, not first load
