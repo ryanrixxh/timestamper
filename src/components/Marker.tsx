@@ -6,11 +6,11 @@ import { postMarker } from "../utils/api"
 import { Store } from 'tauri-plugin-store-api'
 import _ from 'lodash'
 
+let timestamps: string[] = []
 
 async function saveHotkey(store: Store, hotkey: String) {
     await store.set('hotkey', { value: hotkey})
 }
-
 
 //Checks local AppData for a timestamps folder
 async function checkForFolder() {
@@ -24,7 +24,6 @@ function Marker(props) {
     const [hotkey, setHotkey] = useState<string>('start')
     const [count, setCount] = useState(0)
     const [manualTime, setManualTime] = useState({seconds: 0, minutes: 0, hours: 0})
-    const timestamps: string[] = []
 
     //TODO: Needs to track the manual time
     function startTimer() {
@@ -32,13 +31,13 @@ function Marker(props) {
     }
     
     //TODO: invoke a rust filesystem writing function
-    const writeMarkerToFs = async () => {
-        console.log(manualTime)
-        // console.log(timestamps)
-        _.forEach(timestamps, (index) => {
-            console.log(index)
-        })
-        await writeTextFile('timestamps/timestamps.txt', 'text', {dir: BaseDirectory.AppLocalData})
+    async function writeMarkerToFs() {
+        const newTimestamp = manualTime.hours + ':' + manualTime.minutes + ':' + manualTime.seconds
+        timestamps.push(newTimestamp)
+        console.log(timestamps)
+        let timestampString = timestamps.toString()
+        let formatted = timestampString.replaceAll(',', '\n')
+        await writeTextFile('timestamps/timestamps.txt', formatted, {dir: BaseDirectory.AppLocalData})
     }
 
     //Invokes rust keyboard listener
@@ -58,9 +57,6 @@ function Marker(props) {
     // This logic is ran when the hotkey is pressed
     await register(newHotkey, async () => {
         //TODO: register needs to trigger hooks by updating count rather than do thing itself
-        if (props.online === true) {
-            postMarker(props.user_id)
-        }
         setCount(count => count + 1)
     })
 
@@ -84,6 +80,9 @@ function Marker(props) {
 
     //Whenever the count is updated, trigger the creation of a timestamp
     useEffect(() => {
+        if (props.online === true) {
+            postMarker(props.user_id)
+        }
         writeMarkerToFs()
     }, [count])
 
