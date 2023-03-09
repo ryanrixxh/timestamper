@@ -7,6 +7,7 @@ import { Store } from 'tauri-plugin-store-api'
 import _ from 'lodash'
 
 let timestamps: string[] = []
+let date = new Date()
 
 async function saveHotkey(store: Store, hotkey: String) {
     await store.set('hotkey', { value: hotkey})
@@ -24,20 +25,29 @@ function Marker(props) {
     const [hotkey, setHotkey] = useState<string>('start')
     const [count, setCount] = useState(0)
     const [manualTime, setManualTime] = useState({seconds: 0, minutes: 0, hours: 0})
+    const [timer, setTimer] = useState(false)
 
-    //TODO: Needs to track the manual time
-    function startTimer() {
-        
+    function switchTimer() {
+        if(timer === true) {
+            setTimer(false)
+        } else {
+            setTimer(true)
+        }
+    }
+    function resetTimer() {
+        setTimer(false)
+        setManualTime(manualTime => ({...manualTime, seconds: manualTime.seconds = 0, 
+                                                     minutes: manualTime.minutes = 0,
+                                                     hours: manualTime.hours = 0}))
     }
     
-    //TODO: invoke a rust filesystem writing function
     async function writeMarkerToFs() {
         const newTimestamp = manualTime.hours + ':' + manualTime.minutes + ':' + manualTime.seconds
         timestamps.push(newTimestamp)
         console.log(timestamps)
         let timestampString = timestamps.toString()
         let formatted = timestampString.replaceAll(',', '\n')
-        await writeTextFile('timestamps/timestamps.txt', formatted, {dir: BaseDirectory.AppLocalData})
+        await writeTextFile('timestamps/' + date.toDateString() + '.txt', formatted, {dir: BaseDirectory.AppLocalData})
     }
 
     //Invokes rust keyboard listener
@@ -51,17 +61,23 @@ function Marker(props) {
       }
     
     async function changeShortcut(newHotkey: string) {
-    await unregister(hotkey)
-    let current_hotkey = newHotkey
-
-    // This logic is ran when the hotkey is pressed
-    await register(newHotkey, async () => {
-        //TODO: register needs to trigger hooks by updating count rather than do thing itself
-        setCount(count => count + 1)
-    })
-
-    setHotkey(current_hotkey)
-    saveHotkey(props.store, current_hotkey)
+        await unregister(hotkey)
+        let current_hotkey = newHotkey
+        try {
+            await register(newHotkey, async () => {
+                // This logic is ran when the hotkey is pressed
+                setCount(count => count + 1)
+            })
+        } catch(e) {
+            if(typeof e === 'string' && e.includes('already registered')) {
+                
+            } else { 
+                throw e 
+            }
+        }
+        
+        setHotkey(current_hotkey)
+        saveHotkey(props.store, current_hotkey)
     }
 
     //Loads the shortcut from the store
@@ -80,21 +96,25 @@ function Marker(props) {
 
     //Whenever the count is updated, trigger the creation of a timestamp
     useEffect(() => {
-        if (props.online === true) {
-            postMarker(props.user_id)
+        if (count > 0) {
+            if (props.online === true) {
+                postMarker(props.user_id)
+            }
+            writeMarkerToFs()
         }
-        writeMarkerToFs()
     }, [count])
 
     //TODO: The interval of this timer needs to start on a button press, not first load
     useEffect(() => {
-        const seconds_id = setInterval(() => {
-            setManualTime(manualTime => ({...manualTime, seconds: manualTime.seconds++}))
-        }, 1000)
-        return () => {
-            clearInterval(seconds_id)
+        if (timer === true) {
+            const seconds_id = setInterval(() => {
+                setManualTime(manualTime => ({...manualTime, seconds: manualTime.seconds++}))
+            }, 1000)
+            return () => {
+                clearInterval(seconds_id)
+            }
         }
-    }, [])
+    }, [timer])
     useEffect(() => {
         if (manualTime.seconds === 59) {
             setManualTime(manualTime => ({...manualTime, seconds: manualTime.seconds = 0}))
@@ -120,7 +140,8 @@ function Marker(props) {
             </h1>
             <h2>You have made {count} markers this stream!</h2>
             <h2>Manual Timer: {manualTime.hours}:{manualTime.minutes}:{manualTime.seconds}</h2>
-            <button onClick={writeMarkerToFs}>Click</button>
+            <button className="border" onClick={switchTimer}>Start/Stop Timer</button>
+            <button className="border" onClick={resetTimer}>Reset</button>
         </div>
     ) 
 }
