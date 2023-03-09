@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { invoke } from '@tauri-apps/api/tauri'
 import { register, unregister } from '@tauri-apps/api/globalShortcut'
 import {writeTextFile, BaseDirectory, exists, createDir } from '@tauri-apps/api/fs'
-import { postMarker } from "../utils/api"
+import { getStartTime, postMarker } from "../utils/api"
 import { Store } from 'tauri-plugin-store-api'
 import _ from 'lodash'
 
@@ -102,8 +102,7 @@ function Marker(props) {
                 writeMarkerToFs()
             } else {
                 setCount(count => --count)
-            }
-            
+            }         
         }
     }, [count])
 

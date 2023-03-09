@@ -1,5 +1,5 @@
 import { useState, useEffect, useReducer } from 'react'
-import { createClient, getStreamData, getUserData, postEventSub, postMarker } from '../utils/api'
+import { createClient, getStartTime, getStreamData, getUserData, postEventSub, postMarker } from '../utils/api'
 import { User, Stream } from '../utils/interfaces'
 import { register, unregister } from '@tauri-apps/api/globalShortcut'
 import { invoke } from '@tauri-apps/api/tauri'
@@ -33,6 +33,11 @@ function Home(props) {
   async function getStream(id: any) {
     const stream = await getStreamData(id)
     setStream(stream)
+  }
+
+  async function getStart(id: any) {
+    const start = await getStartTime(id)
+    console.log(start)
   }
 
   async function createWebsocket(id: string, eventType: string) {
@@ -73,6 +78,7 @@ function Home(props) {
     if(user?.id) {
       console.log(user)
       getStream(user?.id)
+      getStartTime(user?.id)
       createWebsocket(user?.id, "channel.update") // TODO: Use stream.online when testing is done
     }
   }, [user])

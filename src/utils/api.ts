@@ -48,6 +48,14 @@ export async function getStreamData(id: any) {
   return response.data.data[0]
 }
 
+
+export async function getStartTime(id: any) {
+  const request = '/streams?user_id=' + id
+  const response = await client.get(request)
+  console.log(response)
+  return response.data.data[0].started_at
+}
+
 // Post request to create a marker
 export async function postMarker(id: any) {
   const request = '/streams/markers?user_id=' + id

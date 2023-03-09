@@ -7,7 +7,6 @@ import { Store } from 'tauri-plugin-store-api'
 
 async function getStatus() {
   const store = new Store('.settings.dat')
-  console.log(await store.get('logged'))
 }
 
 function App() {
@@ -23,7 +22,6 @@ function App() {
     if(message == 'logged out') {
       setPageState('Login')
       if (online === true) {
-        console.log('revoking token')
         revokeToken(authToken)
         setOnline(false)
       }
