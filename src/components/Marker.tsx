@@ -69,8 +69,7 @@ function Marker(props) {
                 setCount(count => count + 1)
             })
         } catch(e) {
-            if(typeof e === 'string' && e.includes('already registered')) {
-                
+            if(typeof e === 'string' && e.includes('already registered')) { 
             } else { 
                 throw e 
             }
@@ -99,8 +98,12 @@ function Marker(props) {
         if (count > 0) {
             if (props.online === true) {
                 postMarker(props.user_id)
+            } else if (timer === true) {
+                writeMarkerToFs()
+            } else {
+                setCount(count => --count)
             }
-            writeMarkerToFs()
+            
         }
     }, [count])
 
