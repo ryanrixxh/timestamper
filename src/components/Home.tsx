@@ -24,7 +24,6 @@ function Home(props) {
     props.loginMessage("logged out")
   } 
 
-  // Websocket to listen for changes in stream status
   async function getUser() {
     const user = await getUserData()
     setUser(user)
@@ -40,6 +39,7 @@ function Home(props) {
     console.log(start)
   }
 
+    // Websocket to listen for changes in stream status
   async function createWebsocket(id: string, eventType: string) {
     let ws_id
     const socket = new WebSocket('wss://eventsub-beta.wss.twitch.tv/ws')
@@ -73,7 +73,7 @@ function Home(props) {
     }
   }, [])
 
-  // When user value changes from undefined make a websocket connection
+  // When user value changes from undefined grab all required
   useEffect(() => {
     if(user?.id) {
       console.log(user)
