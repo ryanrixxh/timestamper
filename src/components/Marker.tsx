@@ -41,6 +41,7 @@ function Marker(props) {
                                                      hours: manualTime.hours = 0}))
     }
     
+    //Writes marker to local app data in the filesystem.
     async function writeMarkerToFs() {
         const newTimestamp = manualTime.hours + ':' + manualTime.minutes + ':' + manualTime.seconds
         timestamps.push(newTimestamp)
@@ -106,7 +107,7 @@ function Marker(props) {
         }
     }, [count])
 
-    //TODO: The interval of this timer needs to start on a button press, not first load
+    //Logic for the manual timer
     useEffect(() => {
         if (timer === true) {
             const seconds_id = setInterval(() => {

@@ -30,7 +30,6 @@ export async function revokeToken(token_input) {
   const params = new URLSearchParams();
   params.append('client_id', 'v89m5cded20ey1ppxxsi5ni53c3rv0')
   params.append('token', token_input)
-
   const response = await axios.post('https://id.twitch.tv/oauth2/revoke', params)
   console.log(response)
 }
@@ -48,11 +47,10 @@ export async function getStreamData(id: any) {
   return response.data.data[0]
 }
 
-
+//Get the stream start time in UTC format
 export async function getStartTime(id: any) {
   const request = '/streams?user_id=' + id
   const response = await client.get(request)
-  console.log(response)
   return response.data.data[0].started_at
 }
 
