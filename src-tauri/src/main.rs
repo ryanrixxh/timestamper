@@ -7,6 +7,7 @@ use core::time::Duration;
 use std::sync::{Arc, RwLock, Mutex};
 use lazy_static::lazy_static;
 use device_query::{DeviceQuery, DeviceEvents, DeviceState};
+use open;
 mod navigate;
 
 lazy_static! {
@@ -166,6 +167,12 @@ async fn revoke_token(token: String) {
 
 }
 
+//Shows the timestamps folder in the filesystem
+#[tauri::command]
+fn show_in_filesystem(path: String) {
+  open::that(path);
+}
+
 
 fn main() {
   tauri::Builder::default()
@@ -175,7 +182,7 @@ fn main() {
       Ok(())
     })
     .plugin(tauri_plugin_store::Builder::default().build())
-    .invoke_handler(tauri::generate_handler![twitch_auth_flow, listen_for_keys])
+    .invoke_handler(tauri::generate_handler![twitch_auth_flow, listen_for_keys, show_in_filesystem])
     .build(tauri::generate_context!())
     .expect("error while running tauri application")
     .run(|_app, event| match event { 

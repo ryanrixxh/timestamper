@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { invoke } from '@tauri-apps/api/tauri'
 import { register, unregister } from '@tauri-apps/api/globalShortcut'
 import {writeTextFile, BaseDirectory, exists, createDir } from '@tauri-apps/api/fs'
+import { appLocalDataDir } from '@tauri-apps/api/path'
 import { getStartTime, postMarker } from "../utils/api"
 import { Store } from 'tauri-plugin-store-api'
 import _ from 'lodash'
@@ -12,6 +13,12 @@ let date = new Date()
 async function saveHotkey(store: Store, hotkey: String) {
     await store.set('hotkey', { value: hotkey})
 }
+
+async function showTimestampFolder() {
+    await appLocalDataDir().then((path) => {
+        invoke('show_in_filesystem' ,{path: path + 'timestamps'})
+    })
+} 
 
 //Checks local AppData for a timestamps folder
 async function checkForFolder() {
@@ -145,6 +152,7 @@ function Marker(props) {
             <h2>Manual Timer: {manualTime.hours}:{manualTime.minutes}:{manualTime.seconds}</h2>
             <button className="border" onClick={switchTimer}>Start/Stop Timer</button>
             <button className="border" onClick={resetTimer}>Reset</button>
+            <button className="border" onClick={showTimestampFolder}>Show timestamps in folder</button>
         </div>
     ) 
 }
