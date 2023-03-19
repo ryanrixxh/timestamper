@@ -108,10 +108,11 @@ function Marker(props) {
     //Whenever the count is updated, trigger the creation of a timestamp
     useEffect(() => {
         if (count > 0) {
-            if (props.online === true && timer === true) {
-                postMarker(props.user_id)
-            } else if (timer === true) {
-                writeMarkerToFs()
+            if (timer === true) {
+                writeMarkerToFs() 
+                if(props.online === true) {
+                    postMarker(props.user_id)
+                }
             } else {
                 setCount(count => --count)
             }         
@@ -121,6 +122,7 @@ function Marker(props) {
     //Logic for the manual timer
     useEffect(() => {
         if (timer === true) {
+            setManualTime(manualTime => ({...manualTime, seconds: manualTime.seconds + props.delay}))
             const seconds_id = setInterval(() => {
                 setManualTime(manualTime => ({...manualTime, seconds: manualTime.seconds++}))
             }, 1000)
@@ -141,6 +143,15 @@ function Marker(props) {
 
     }, [manualTime.seconds, manualTime.minutes, hotkey])
 
+    useEffect(() => {
+        if (props.live == true) {
+            switchTimer()
+        } else if (props.live == false) {
+            setCount(0)
+            resetTimer()
+        }
+    }, [props.live])
+
     return(
         <div>
             <h1 className="text-3xl font-bold mt-4">
@@ -148,11 +159,10 @@ function Marker(props) {
             </h1>
             <button className="text-xl border" onClick={getShortcut}>Set Hotkey</button>
             <h2>Your hotkey is: {hotkey}</h2>
-
             <h1 className="text-3xl font-bold mt-4">
             Stats
             </h1>
-            <h2>You have made {count} markers this stream!</h2>
+            {props.live && <h2>You have made {count} markers this stream!</h2> }
             <h2>Manual Timer: {manualTime.hours}:{manualTime.minutes}:{manualTime.seconds}</h2>
             <button className="border" onClick={switchTimer}>Start/Stop Timer</button>
             <button className="border" onClick={resetTimer}>Reset</button>

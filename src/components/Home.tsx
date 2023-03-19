@@ -7,9 +7,11 @@ import Marker from './Marker'
 
 function Home(props) {
   // Store keeps persisent data
-  const store = new Store(".settings.dat")
+  const store: Store = new Store(".settings.dat")
   const [user, setUser] = useState<User>()
   const [stream, setStream] = useState<Stream>()
+  const [live, setLive] = useState<boolean>(false)
+  const [delay, setDelay] = useState<number>(0)
 
   async function logout() {
     setLogged(store, false)
@@ -32,6 +34,7 @@ function Home(props) {
     const socket = new WebSocket('wss://eventsub-beta.wss.twitch.tv/ws')
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data)
+      // When a welcome message is sent, establish the subscription type
       if (message.metadata.message_type === 'session_welcome') {
           ws_id = message.payload.session.id
   
@@ -47,10 +50,26 @@ function Home(props) {
               }
           }
         postEventSub(body)
-      } else if (message.metadata.message_type !== 'session_keepalive') {
-          let start_time: Date = new Date(message.payload.event.started_at)
-          formatTime(start_time)
-          getStream(user?.id)
+      } else if (message.metadata.message_type === 'notification') {   
+          // Handle the ws messages based on subscription type
+          switch (message.metadata.subscription_type) {
+            case 'stream.online': {
+              console.log('stream has gone online')
+              let start_time: Date = new Date(message.payload.event.started_at)
+              setDelay(formatTime(start_time))
+              setLive(true)
+              getStream(user?.id)
+            } 
+            break
+            case 'stream.offline': {
+              console.log('stream has gone offline')
+              setDelay(0)
+              setLive(false)
+            }
+            break
+            default: {}
+          }
+
       }
     }
   }
@@ -66,18 +85,26 @@ function Home(props) {
   useEffect(() => {
     if(user?.id) {
       getStream(user?.id)
-      createWebsocket(user?.id, "stream.online") // TODO: Use stream.online when testing is done
+      createWebsocket(user?.id, 'stream.online')
+      createWebsocket(user?.id, 'stream.offline')
     }
   }, [user])
   
   return (
     <div className="App">
+        { live === true &&  <h2>You are live!</h2> }
+        { live === false && <h2>Offline</h2> }
+        
         {props.online === true && <Info display_name={user?.display_name} 
                                         game_name={stream?.game_name} 
-                                        title={stream?.title}
-                                        start_time={stream?.start_time}/>  }
+                                        title={stream?.title}/>  }
 
-        <Marker user_id={user?.id} store={store} online={props.online}/>
+        <Marker user_id={user?.id} 
+                store={store} 
+                online={props.online} 
+                delay={delay}
+                live={live}/>
+
         <button className="text-xl border" onClick={logout}>Logout</button>
     </div>
   )
@@ -87,11 +114,12 @@ async function setLogged(store: Store, logStatus: Boolean) {
   await store.set('logged', { value: logStatus})
 }
 
-function formatTime(time: Date) {
+function formatTime(time: Date): number {
   let start: number = time.valueOf()
   let now: number = Date.now().valueOf()
   let gap = (now - start) / 1000
-  console.log(gap, 'second delay')
+  gap = Math.round(gap)
+  return gap
 }
 
 export default Home
