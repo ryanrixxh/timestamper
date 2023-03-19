@@ -24,7 +24,14 @@
       "window": {
         "all": true
       },
+      "fs": {
+        "all": true,
+        "scope": ["$APPLOCALDATA/**"]
+      },
       "globalShortcut": {
+        "all": true
+      },
+      "path": {
         "all": true
       }
     },

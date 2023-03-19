@@ -22,11 +22,19 @@ function Login(props) {
     setLoggedTrue(store)
   } 
 
+  //Skips the login process with twitch. The prop given to the home component will enforce lack of rendering.
+  function skipAuth() {
+    props.loginMessage("offline")
+  }
+
   return (
     <div className="App">
       <div className="card">
         <button onClick={auth}>
           Login
+        </button>
+        <button onClick={skipAuth}>
+          Continue in Offline Mode
         </button>
       </div>
     </div>

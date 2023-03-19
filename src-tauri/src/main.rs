@@ -7,6 +7,7 @@ use core::time::Duration;
 use std::sync::{Arc, RwLock, Mutex};
 use lazy_static::lazy_static;
 use device_query::{DeviceQuery, DeviceEvents, DeviceState};
+use open;
 mod navigate;
 
 lazy_static! {
@@ -46,7 +47,6 @@ struct Payload {
 
 #[tauri::command]
 async fn twitch_auth_flow(app: AppHandle, logged: bool) -> String {
-  println!("{}", logged);
   //Build a new window to handle the auth flow
   let token = Arc::new(RwLock::new("empty".to_string()));
   let token_clone = token.clone();
@@ -95,7 +95,6 @@ async fn twitch_auth_flow(app: AppHandle, logged: bool) -> String {
 }
 
 // Listens for all keypresses and sets a new hotkey when a key is found
-
 #[tauri::command]
 fn listen_for_keys() -> String {
   let device_state = DeviceState::new();
@@ -111,7 +110,6 @@ fn listen_for_keys() -> String {
     *cancel_writer = true;
   });
   
-  //TODO: Find a way to set some kind of bool on mouse click
   let lock_loop = Arc::clone(&cancelled);
   loop {
     let cancel_reader = lock_loop.lock().unwrap();
@@ -151,8 +149,7 @@ fn listen_for_keys() -> String {
   return hotkey;
 } 
 
-//Sends the request to revoke the current access token upon ExitRequested
-
+//Sends the request to revoke the current access token
 async fn revoke_token(token: String) {
   let body_string = format!("client_id=v89m5cded20ey1ppxxsi5ni53c3rv0&token={}", token);
   let client = ClientBuilder::new().build().unwrap();
@@ -170,6 +167,12 @@ async fn revoke_token(token: String) {
 
 }
 
+//Shows the timestamps folder in the filesystem
+#[tauri::command]
+fn show_in_filesystem(path: String) {
+  open::that(path);
+}
+
 
 fn main() {
   tauri::Builder::default()
@@ -179,10 +182,10 @@ fn main() {
       Ok(())
     })
     .plugin(tauri_plugin_store::Builder::default().build())
-    .invoke_handler(tauri::generate_handler![twitch_auth_flow, listen_for_keys])
+    .invoke_handler(tauri::generate_handler![twitch_auth_flow, listen_for_keys, show_in_filesystem])
     .build(tauri::generate_context!())
     .expect("error while running tauri application")
-    .run(|_app, event| match event { //TODO: Use this event listener to revoke token when an exit request occurs
+    .run(|_app, event| match event { 
       RunEvent::ExitRequested { .. } => {
         println!("{:?}", event);
         let exit_token_guard = TOKEN.lock().unwrap();

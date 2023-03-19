@@ -7,24 +7,32 @@ import { Store } from 'tauri-plugin-store-api'
 
 async function getStatus() {
   const store = new Store('.settings.dat')
-  console.log(await store.get('logged'))
 }
 
 function App() {
   const [pageState, setPageState] = useState('Login')
   const [authToken, setAuthToken] = useState('empty')
+  const [online, setOnline] = useState(false)
 
 
   import.meta.env.VITE_LOGGED = false
-  const loginMessage = (token: string) => {
+  
+  const loginMessage = (message: string) => {
     getStatus()
-    console.log(token)
-    if(token == 'logged out') {
+    if(message == 'logged out') {
       setPageState('Login')
-      revokeToken(authToken)
-    } else if(token !== 'logged out' && token.length > 0) {
+      if (online === true) {
+        revokeToken(authToken)
+        setOnline(false)
+      }
+    } else if(message == 'offline') {
+      setPageState('Home')
+      setOnline(false)
+    } else if(message !== 'logged out' && message.length > 0) {
+        let token = message
         validateToken(token)
         setAuthToken(token)
+        setOnline(true)
         setPageState('Home')
     }
   }
@@ -32,7 +40,7 @@ function App() {
   return (
     <div>
       { pageState === 'Login' && <Login loginMessage={loginMessage}/>}
-      { pageState === 'Home' && <Home token={authToken} loginMessage={loginMessage}/> }
+      { pageState === 'Home' && <Home token={authToken} loginMessage={loginMessage} online={online}/> }
     </div>
   )
 }
