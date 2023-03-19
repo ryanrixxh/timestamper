@@ -154,19 +154,19 @@ function Marker(props) {
 
     return(
         <div>
-            <h1 className="text-3xl font-bold mt-4">
-            Marker Hotkeys
-            </h1>
+            <h1 className="text-3xl font-bold mt-4">Marker Hotkeys</h1>
+            
             <button className="text-xl border" onClick={getShortcut}>Set Hotkey</button>
             <h2>Your hotkey is: {hotkey}</h2>
-            <h1 className="text-3xl font-bold mt-4">
-            Stats
-            </h1>
+           
+            <h1 className="text-3xl font-bold mt-4">Stats</h1>
             {props.live && <h2>You have made {count} markers this stream!</h2> }
-            <h2>Manual Timer: {manualTime.hours}:{manualTime.minutes}:{manualTime.seconds}</h2>
-            <button className="border" onClick={switchTimer}>Start/Stop Timer</button>
-            <button className="border" onClick={resetTimer}>Reset</button>
-            <button className="border" onClick={showTimestampFolder}>Show timestamps in folder</button>
+            <h2>{manualTime.hours}:{manualTime.minutes}:{manualTime.seconds}</h2>
+            { props.live === false && <div> 
+                                        <button className="border" onClick={switchTimer}>Start/Stop Timer</button>
+                                        <button className="border" onClick={resetTimer}>Reset</button>
+                                      </div> }
+            <button className="border" onClick={showTimestampFolder}>Show timestamps in folder</button> 
         </div>
     ) 
 }
