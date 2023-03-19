@@ -1,17 +1,9 @@
-import { useState, useEffect, useReducer } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient, getStreamData, getUserData, postEventSub, postMarker } from '../utils/api'
 import { User, Stream } from '../utils/interfaces'
-import { register, unregister } from '@tauri-apps/api/globalShortcut'
-import { invoke } from '@tauri-apps/api/tauri'
 import { Store } from 'tauri-plugin-store-api'
 import Info from './Info'
 import Marker from './Marker'
-
-
-async function setLogged(store: Store, logStatus: Boolean) {
-  await store.set('logged', { value: logStatus})
-}
-
 
 function Home(props) {
   // Store keeps persisent data
@@ -56,7 +48,8 @@ function Home(props) {
           }
         postEventSub(body)
       } else if (message.metadata.message_type !== 'session_keepalive') {
-          console.log(message)
+          let start_time: Date = new Date(message.payload.event.started_at)
+          formatTime(start_time)
           getStream(user?.id)
       }
     }
@@ -73,7 +66,7 @@ function Home(props) {
   useEffect(() => {
     if(user?.id) {
       getStream(user?.id)
-      createWebsocket(user?.id, "channel.update") // TODO: Use stream.online when testing is done
+      createWebsocket(user?.id, "stream.online") // TODO: Use stream.online when testing is done
     }
   }, [user])
   
@@ -88,6 +81,17 @@ function Home(props) {
         <button className="text-xl border" onClick={logout}>Logout</button>
     </div>
   )
+}
+
+async function setLogged(store: Store, logStatus: Boolean) {
+  await store.set('logged', { value: logStatus})
+}
+
+function formatTime(time: Date) {
+  let start: number = time.valueOf()
+  let now: number = Date.now().valueOf()
+  let gap = (now - start) / 1000
+  console.log(gap, 'second delay')
 }
 
 export default Home
