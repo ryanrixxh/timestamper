@@ -1,5 +1,5 @@
 import { useState, useEffect, useReducer } from 'react'
-import { createClient, getStartTime, getStreamData, getUserData, postEventSub, postMarker } from '../utils/api'
+import { createClient, getStreamData, getUserData, postEventSub, postMarker } from '../utils/api'
 import { User, Stream } from '../utils/interfaces'
 import { register, unregister } from '@tauri-apps/api/globalShortcut'
 import { invoke } from '@tauri-apps/api/tauri'
@@ -34,11 +34,6 @@ function Home(props) {
     setStream(stream)
   }
 
-  async function getStart(id: any) {
-    const start = await getStartTime(id)
-    console.log(start)
-  }
-
     // Websocket to listen for changes in stream status
   async function createWebsocket(id: string, eventType: string) {
     let ws_id
@@ -61,6 +56,7 @@ function Home(props) {
           }
         postEventSub(body)
       } else if (message.metadata.message_type !== 'session_keepalive') {
+          console.log(message)
           getStream(user?.id)
       }
     }
@@ -76,9 +72,7 @@ function Home(props) {
   // When user value changes from undefined grab all required
   useEffect(() => {
     if(user?.id) {
-      console.log(user)
       getStream(user?.id)
-      getStartTime(user?.id)
       createWebsocket(user?.id, "channel.update") // TODO: Use stream.online when testing is done
     }
   }, [user])
@@ -87,7 +81,8 @@ function Home(props) {
     <div className="App">
         {props.online === true && <Info display_name={user?.display_name} 
                                         game_name={stream?.game_name} 
-                                        title={stream?.title}/>  }
+                                        title={stream?.title}
+                                        start_time={stream?.start_time}/>  }
 
         <Marker user_id={user?.id} store={store} online={props.online}/>
         <button className="text-xl border" onClick={logout}>Logout</button>

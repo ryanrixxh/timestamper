@@ -47,13 +47,6 @@ export async function getStreamData(id: any) {
   return response.data.data[0]
 }
 
-//Get the stream start time in UTC format
-export async function getStartTime(id: any) {
-  const request = '/streams?user_id=' + id
-  const response = await client.get(request)
-  return response.data.data[0].started_at
-}
-
 // Post request to create a marker
 export async function postMarker(id: any) {
   const request = '/streams/markers?user_id=' + id
