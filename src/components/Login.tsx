@@ -32,11 +32,13 @@ function Login(props) {
   return (
     <div className="App">
       <div className="card">
-        <button className="modeButton" onClick={auth}>
+        <button className="modeButton online buttonShadow"/>
+        <button className="modeButton online" onClick={auth}>
           Login
         </button>
-        <button onClick={skipAuth}>
-          Continue in Offline Mode
+        <button className="modeButton offline buttonShadow"/>
+        <button className="modeButton offline" onClick={skipAuth}>
+          Offline
         </button>
       </div>
     </div>
