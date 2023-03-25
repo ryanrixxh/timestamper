@@ -31,7 +31,9 @@ function Login(props) {
 
   return (
     <div className="App">
-      <div className="card">
+      <div className="backdrop">
+        <h1 className="title">Timestamper</h1>
+        <h2 className="tagline">Capture the moment. Stay in the moment</h2>
         <button className="modeButton online buttonShadow"/>
         <button className="modeButton online" onClick={auth}>
           Login

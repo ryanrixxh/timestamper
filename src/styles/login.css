@@ -1,7 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Roboto:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
 
 :root {
-    --button-background-color: #5900b3
+    --button-background-color: #5900b3;
+    --main-font: 'Roboto';
 }
 
 .modeButton {
@@ -10,7 +11,7 @@
     top: 50%;
     width: 130px;
     height: 50px;
-    font-family: 'Roboto', sans-serif;
+    font-family: var(--main-font);
     font-size: 20px;
     font-weight: 800;
     border: 1px solid var(--button-background-color);
@@ -22,10 +23,11 @@
 
     &.online {
         left: 35%;
+        margin-left: 20px;
     }
 
     &.offline {
-        right: 35%
+        right: 35%;
     }
 
     &.buttonShadow {
@@ -33,5 +35,29 @@
         background-color:  var(--button-background-color);
         border: 1px solid  var(--button-background-color);
     }
+}
 
+.title {
+    position: absolute;
+    font-size: 100px;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--main-font);
+    /* text-shadow: 0px 1px 3px; */
+}
+
+.tagline {
+    position: absolute;
+    font-size: 25px;
+    top: 41%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--main-font);
+    color: grey;
+}
+
+.backdrop {
+    border: solid;
+    background-color: #8c8c8c;
 }
