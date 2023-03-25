@@ -1,0 +1,7 @@
+.modeButton {
+    background-color: aqua;
+    
+    &:hover {
+        background-color: red;
+    }
+}

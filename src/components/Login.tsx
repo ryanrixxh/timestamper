@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { invoke } from '@tauri-apps/api/tauri'
 import { Store } from 'tauri-plugin-store-api'
+import '../styles/login.css'
+
 
 async function setLoggedTrue(store: Store) {
   await store.set('logged', { value: true})
@@ -30,7 +32,7 @@ function Login(props) {
   return (
     <div className="App">
       <div className="card">
-        <button onClick={auth}>
+        <button className="modeButton" onClick={auth}>
           Login
         </button>
         <button onClick={skipAuth}>
