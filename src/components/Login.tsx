@@ -30,19 +30,26 @@ function Login(props) {
   }
 
   return (
-    <div className="App">
+    <div>
       <div className="backdrop">
-        <h1 className="title">Timestamper</h1>
-        <h2 className="tagline">Capture the moment. Stay in the moment</h2>
-        <button className="modeButton online buttonShadow"/>
-        <button className="modeButton online" onClick={auth}>
-          Login
-        </button>
-        <button className="modeButton offline buttonShadow"/>
-        <button className="modeButton offline" onClick={skipAuth}>
-          Offline
-        </button>
+        <div className="titleCard">
+          <h1 className="title">Timestamper</h1>
+          <h2 className="tagline">Capture the moment. Stay in the moment.</h2>
+        </div>
+
+        <div className="buttonCard">
+          <button className="modeButton online" onClick={auth}>
+            Login
+          </button>
+          <button className="modeButton offline" onClick={skipAuth}>
+            Offline
+          </button>
+        </div>
       </div>
+
+    <a href="https://www.twitch.tv/futuuure_" target="_blank" className="shoutout">Made by futuuure_</a>
+      
+
     </div>
   )
 }
