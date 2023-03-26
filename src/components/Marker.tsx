@@ -7,10 +7,6 @@ import { postMarker } from "../utils/api"
 import { Store } from 'tauri-plugin-store-api'
 import _ from 'lodash'
 
-// TODO: Needs to adapt what its functionality based on offline/online modes
-// TODO: In online mode the timer needs to trigger when the streamer is found as online.
-//       The timer needs to account for the delay by taking the stream time as an input when it is found. 
-
 let timestamps: string[] = []
 let date = new Date()
 

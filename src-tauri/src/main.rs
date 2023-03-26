@@ -45,6 +45,8 @@ struct Payload {
 
 //Flow used to authenticating with twitch
 
+//TODO: Unwrap functions will panic on err. Change to pattern matching for uncertain logic.
+
 #[tauri::command]
 async fn twitch_auth_flow(app: AppHandle, logged: bool) -> String {
   //Build a new window to handle the auth flow

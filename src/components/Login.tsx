@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { invoke } from '@tauri-apps/api/tauri'
 import { Store } from 'tauri-plugin-store-api'
+import '../styles/login.css'
+
 
 async function setLoggedTrue(store: Store) {
   await store.set('logged', { value: true})
@@ -28,15 +30,26 @@ function Login(props) {
   }
 
   return (
-    <div className="App">
-      <div className="card">
-        <button onClick={auth}>
-          Login
-        </button>
-        <button onClick={skipAuth}>
-          Continue in Offline Mode
-        </button>
+    <div>
+      <div className="backdrop">
+        <div className="titleCard">
+          <h1 className="title">Timestamper</h1>
+          <h2 className="tagline">Capture the moment. Stay in the moment.</h2>
+        </div>
+
+        <div className="buttonCard">
+          <button className="modeButton online" onClick={auth}>
+            Login
+          </button>
+          <button className="modeButton offline" onClick={skipAuth}>
+            Offline
+          </button>
+        </div>
       </div>
+
+    <a href="https://www.twitch.tv/futuuure_" target="_blank" className="shoutout">Made by futuuure_</a>
+      
+
     </div>
   )
 }
