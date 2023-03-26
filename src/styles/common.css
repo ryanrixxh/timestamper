@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+
+:root {
+    --button-background-color: #5900b3;
+    --main-font: 'Roboto';
+}
+
+.modeButton {
+    padding: 0;
+    border-radius: 13px;
+    width: 130px;
+    height: 50px;
+    font-family: var(--main-font);
+    font-size: 20px;
+    font-weight: 800;
+    border: 1px solid var(--button-background-color);
+    color: grey;
+    border-bottom-width: 5px;
+
+    &:hover {
+        background-color: #ccb3ff;
+    }
+}
+
+.backdrop {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.shoutout {
+    position: absolute;
+    left: 90%;
+    top: 90%;
+    width: 200px;
+    transform: translate(-70%, -50%);
+    font-family: var(--main-font);
+    font-size: 20px;
+    color: grey;
+    text-decoration: None;
+
+    &:hover {
+        color: black;
+    }
+}
+
+.sectionHeading {
+    font-family: var(--main-font);
+    font-size: 36px;
+    color: grey;
+}
+

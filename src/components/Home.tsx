@@ -105,7 +105,7 @@ function Home(props) {
                 delay={delay}
                 live={live}/>
 
-        <button className="text-xl border" onClick={logout}>Logout</button>
+        <button onClick={logout}>Logout</button>
     </div>
   )
 }

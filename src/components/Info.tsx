@@ -1,7 +1,9 @@
+import '../styles/info.css'
+
 function Info(props) {
     return(
         <div>
-            <h1 className="text-3xl font-bold">
+            <h1 className="tagline">
             Stream Info 
             </h1>
             <h2> {props.display_name} </h2>

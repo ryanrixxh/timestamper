@@ -6,6 +6,7 @@ import { appLocalDataDir } from '@tauri-apps/api/path'
 import { postMarker } from "../utils/api"
 import { Store } from 'tauri-plugin-store-api'
 import _ from 'lodash'
+import '../styles/marker.css'
 
 let timestamps: string[] = []
 let date = new Date()
@@ -150,12 +151,13 @@ function Marker(props) {
 
     return(
         <div>
-            <h1 className="text-3xl font-bold mt-4">Marker Hotkeys</h1>
+            <h1 className="sectionHeading">Hotkeys</h1>
             
             <button className="text-xl border" onClick={getShortcut}>Set Hotkey</button>
-            <h2>Your hotkey is: {hotkey}</h2>
+            <h2>Your hotkey is:</h2>
+            <button className="modeButton hotkeyButton">{hotkey}</button>
            
-            <h1 className="text-3xl font-bold mt-4">Stats</h1>
+            <h1 className="sectionHeading">Stats</h1>
             {props.live && <h2>You have made {count} markers this stream!</h2> }
             <h2>{manualTime.hours}:{manualTime.minutes}:{manualTime.seconds}</h2>
             { props.live === false && <div> 
