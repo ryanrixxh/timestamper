@@ -16,12 +16,14 @@ function Login(props) {
     const store = new Store(".settings.dat")
     const val: any = await store.get('logged')
     const status: Boolean = val.value
+   
     await invoke('twitch_auth_flow', {logged: status}).then((message) => {
-      setToken(message as any)
-      props.loginMessage(message as any)
+      if (message !== 'access_denied') {
+        setToken(message as any)
+        props.loginMessage(message as any)
+        setLoggedTrue(store)
+      }
     })
-    //TODO: Needs a check to see if the auth actually succeeds
-    setLoggedTrue(store)
   } 
 
   //Skips the login process with twitch. The prop given to the home component will enforce lack of rendering.

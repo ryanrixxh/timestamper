@@ -2,13 +2,13 @@ import '../styles/info.css'
 
 function Info(props) {
     return(
-        <div>
-            <h1 className="tagline">
+        <div className="infoSection">
+            <h1 className="heading">
             Stream Info 
             </h1>
-            <h2> {props.display_name} </h2>
-            <h2> {props.game_name} </h2>
-            <h2> {props.title} </h2>
+            <h2 className="streamInfo"> {props.display_name} </h2>
+            <h2 className="streamInfo"> {props.game_name} </h2>
+            <h2 className="streamInfo"> {props.title} </h2>
         </div>
     )
 }

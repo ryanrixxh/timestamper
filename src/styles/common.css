@@ -45,9 +45,9 @@
     }
 }
 
-.sectionHeading {
+.heading {
     font-family: var(--main-font);
     font-size: 36px;
-    color: grey;
+    color: black;
 }
 

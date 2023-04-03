@@ -5,6 +5,8 @@ import { Store } from 'tauri-plugin-store-api'
 import Info from './Info'
 import Marker from './Marker'
 
+import '../styles/home.css'
+
 function Home(props) {
   // Store keeps persisent data
   const store: Store = new Store(".settings.dat")
@@ -91,9 +93,10 @@ function Home(props) {
   }, [user])
   
   return (
-    <div className="App">
-        { live === true &&  <h2>You are live!</h2> }
-        { live === false && <h2>Offline</h2> }
+    <div>
+      <div className="backdrop homeBackdrop">
+        { live === true &&  <h2 className="loggedDisplay">You are live!</h2> }
+        { live === false && <h2 className="loggedDisplay">Offline</h2> }
         
         {props.online === true && <Info display_name={user?.display_name} 
                                         game_name={stream?.game_name} 
@@ -104,8 +107,9 @@ function Home(props) {
                 online={props.online} 
                 delay={delay}
                 live={live}/>
-
-        <button onClick={logout}>Logout</button>
+      </div>
+      <button onClick={logout}>Logout</button>
+      <a href="https://www.twitch.tv/futuuure_" target="_blank" className="shoutout">Made by futuuure_</a>
     </div>
   )
 }
