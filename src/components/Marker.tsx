@@ -6,6 +6,7 @@ import { appLocalDataDir } from '@tauri-apps/api/path'
 import { postMarker } from "../utils/api"
 import { Store } from 'tauri-plugin-store-api'
 import _ from 'lodash'
+import '../styles/marker.css'
 
 let timestamps: string[] = []
 let date = new Date()
@@ -30,6 +31,7 @@ async function checkForFolder() {
 
 function Marker(props) {
     const [hotkey, setHotkey] = useState<string>('start')
+    const [hkPrompt, setHkPrompt] = useState<string>('')
     const [count, setCount] = useState(0)
     const [manualTime, setManualTime] = useState({seconds: 0, minutes: 0, hours: 0})
     const [timer, setTimer] = useState(false)
@@ -85,6 +87,8 @@ function Marker(props) {
         
         setHotkey(current_hotkey)
         saveHotkey(props.store, current_hotkey)
+
+        setHkPrompt(current_hotkey)
     }
 
     //Loads the shortcut from the store
@@ -93,6 +97,8 @@ function Marker(props) {
         const savedHotkey: string = (val.value !== null) ? val.value : ''
         setHotkey(savedHotkey)
         changeShortcut(savedHotkey)
+
+        setHkPrompt(savedHotkey)
     }
 
     //Load the shortcut on first page load
@@ -149,20 +155,27 @@ function Marker(props) {
     }, [props.live])
 
     return(
-        <div>
-            <h1 className="text-3xl font-bold mt-4">Marker Hotkeys</h1>
-            
-            <button className="text-xl border" onClick={getShortcut}>Set Hotkey</button>
-            <h2>Your hotkey is: {hotkey}</h2>
-           
-            <h1 className="text-3xl font-bold mt-4">Stats</h1>
-            {props.live && <h2>You have made {count} markers this stream!</h2> }
-            <h2>{manualTime.hours}:{manualTime.minutes}:{manualTime.seconds}</h2>
-            { props.live === false && <div> 
-                                        <button className="border" onClick={switchTimer}>Start/Stop Timer</button>
-                                        <button className="border" onClick={resetTimer}>Reset</button>
-                                      </div> }
-            <button className="border" onClick={showTimestampFolder}>Show timestamps in folder</button> 
+        <div className="markerBackdrop">
+            <div className="hotkeySection">
+                <h1 className="heading">Hotkey</h1>    
+                <button className="hotkeyButton modeButton" 
+                        onMouseEnter={() => {setHkPrompt('Change?')} } 
+                        onMouseLeave={() => {setHkPrompt(hotkey)}}
+                        onClick={getShortcut}>
+                        {hkPrompt}
+                </button>
+            </div>
+
+            <div className="statsSection">
+                <h1 className="heading">Stats</h1>
+                {props.live && <h2>You have made {count} markers this stream!</h2> }
+                <h2>{manualTime.hours}:{manualTime.minutes}:{manualTime.seconds}</h2>
+                { props.live === false && <div> 
+                                            <button onClick={switchTimer}>Start/Stop Timer</button>
+                                            <button onClick={resetTimer}>Reset</button>
+                                        </div> }
+                <button onClick={showTimestampFolder}>Show timestamps in folder</button> 
+            </div>
         </div>
     ) 
 }

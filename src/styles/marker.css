@@ -1,0 +1,30 @@
+@import './common.css';
+
+.markerBackdrop {
+    /* border: solid; */
+    display: flex;
+    justify-content: flex-start;
+
+}
+
+.hotkeySection {
+    /* border: solid;
+    border-color: red; */
+}
+
+.statsSection {
+    /* border: solid;
+    border-color: blue; */
+    font-family: var(--main-font);
+    margin-left: 200px;
+}
+
+
+
+.hotkeyButton {
+    color: black;
+
+    &:hover {
+        color: black;
+    }
+}

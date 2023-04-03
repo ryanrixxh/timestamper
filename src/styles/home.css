@@ -1,0 +1,11 @@
+@import './common.css';
+
+.homeBackdrop {
+    width: 700px;
+}
+
+.loggedDisplay {
+    font-family: var(--main-font);
+    font-size: 12pt;
+    color: grey;
+}

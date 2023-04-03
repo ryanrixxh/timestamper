@@ -1,5 +1,6 @@
 use tauri::{Manager, AppHandle, RunEvent};
-use tauri::api::http::{HttpRequestBuilder, ClientBuilder, Body};
+use tauri::api::http::{HttpRequestBuilder, ClientBuilder, Body, Response};
+use tauri::api::Error;
 use futures::executor::block_on;
 use url::Url;
 use std::thread::sleep;
@@ -45,10 +46,10 @@ struct Payload {
 
 //Flow used to authenticating with twitch
 
-//TODO: Unwrap functions will panic on err. Change to pattern matching for uncertain logic.
 
+//TODO: Failed tauri login needs to be handled without a panic. 
 #[tauri::command]
-async fn twitch_auth_flow(app: AppHandle, logged: bool) -> String {
+async fn twitch_auth_flow(app: AppHandle, logged: bool) -> String  {
   //Build a new window to handle the auth flow
   let token = Arc::new(RwLock::new("empty".to_string()));
   let token_clone = token.clone();
@@ -79,6 +80,7 @@ async fn twitch_auth_flow(app: AppHandle, logged: bool) -> String {
   } else {
     auth = Url::parse(TWITCH_AUTH_URL_FORCE).unwrap();
   }
+  
   navigate::webview_navigate(&window, auth).unwrap();
   
   //Wait for recieved token
@@ -96,7 +98,7 @@ async fn twitch_auth_flow(app: AppHandle, logged: bool) -> String {
   }
 }
 
-// Listens for all keypresses and sets a new hotkey when a key is found
+//TODO: Failed keywrite needs to be handled without a panic
 #[tauri::command]
 fn listen_for_keys() -> String {
   let device_state = DeviceState::new();
@@ -152,34 +154,34 @@ fn listen_for_keys() -> String {
 } 
 
 //Sends the request to revoke the current access token
-async fn revoke_token(token: String) {
+//TODO: Needs to return error if the status on the response is 400
+async fn revoke_token(token: String) -> Result<Response, Error> {
   let body_string = format!("client_id=v89m5cded20ey1ppxxsi5ni53c3rv0&token={}", token);
-  let client = ClientBuilder::new().build().unwrap();
+  let client = ClientBuilder::new().build()?;
   let body: Body = Body::Text(body_string); 
-  let request: HttpRequestBuilder = HttpRequestBuilder::new("POST", "https://id.twitch.tv/oauth2/revoke")
+  let request = HttpRequestBuilder::new("POST", "https://id.twitch.tv/oauth2/revoke")
       .unwrap()
       .body(body)
       .header("Content-Type", "application/x-www-form-urlencoded")
       .unwrap();
-  if let Ok(response) = client.send(request).await {
-    println!("{:?}", response);
-  } else {
-    println!("request bad");
-  }
 
+  
+  let response = client.send(request).await?; 
+  Ok(response)
 }
 
 //Shows the timestamps folder in the filesystem
+// TODO: Needs error handling and a return of some kind
 #[tauri::command]
-fn show_in_filesystem(path: String) {
-  open::that(path);
+fn show_in_filesystem(path: &str) {
+  open::that(path).unwrap();
 }
 
 
 fn main() {
   tauri::Builder::default()
     .setup(|app| {
-      let window = app.get_window("main").unwrap();
+      let window = app.get_window("main").expect("Error while creating main window");
       window.open_devtools();
       Ok(())
     })
@@ -189,11 +191,11 @@ fn main() {
     .expect("error while running tauri application")
     .run(|_app, event| match event { 
       RunEvent::ExitRequested { .. } => {
-        println!("{:?}", event);
-        let exit_token_guard = TOKEN.lock().unwrap();
-        let future = revoke_token((*exit_token_guard.clone()).to_string());
-        block_on(future);
+        let exit_token_guard = TOKEN.lock().expect("Error grabbing token lock");
+        let revoke = revoke_token(exit_token_guard.clone());
+        block_on(revoke).expect("Failed to revoke token");
       }
       _ => {}
     });
 }
+
