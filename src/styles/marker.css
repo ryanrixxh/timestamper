@@ -1,5 +1,7 @@
 @import './common.css';
 
+
+
 .markerBackdrop {
     /* border: solid; */
     display: flex;
@@ -17,6 +19,17 @@
     border-color: blue; */
     font-family: var(--main-font);
     margin-left: 200px;
+}
+
+.smallButton {
+    font-family: var(--main-font);
+    background: none;
+    border: none;
+    font-size: 12pt;
+
+    &:hover {
+        color: grey;
+    }
 }
 
 
