@@ -1,5 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
 
+/* Cut off point for sensible square display is 700px horizontally 550px vertically.
+    Display will need to have three modes that render different placements: 
+        Regular: What is now, mix of horizontal and vertical alignment
+        Horizontal: When the user sets the vertical height too small, align everything horizontally
+        Vertical: When the user sets the horizonal width too small, align everything vertically
+*/
+
 :root {
     --button-background-color: #5900b3;
     --main-font: 'Roboto';

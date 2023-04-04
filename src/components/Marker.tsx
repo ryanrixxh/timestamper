@@ -171,10 +171,10 @@ function Marker(props) {
                 {props.live && <h2>You have made {count} markers this stream!</h2> }
                 <h2>{manualTime.hours}:{manualTime.minutes}:{manualTime.seconds}</h2>
                 { props.live === false && <div> 
-                                            <button onClick={switchTimer}>Start/Stop Timer</button>
-                                            <button onClick={resetTimer}>Reset</button>
+                                            <button className="smallButton" onClick={switchTimer}>Start/Stop Timer</button>
+                                            <button className="smallButton" onClick={resetTimer}>Reset</button>
                                         </div> }
-                <button onClick={showTimestampFolder}>Show timestamps in folder</button> 
+                <button className="smallButton" onClick={showTimestampFolder}>Show timestamps in folder</button> 
             </div>
         </div>
     ) 
