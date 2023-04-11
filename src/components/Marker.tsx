@@ -5,7 +5,7 @@ import {writeTextFile, BaseDirectory, exists, createDir } from '@tauri-apps/api/
 import { appLocalDataDir } from '@tauri-apps/api/path'
 import { postMarker } from "../utils/api"
 import { Store } from 'tauri-plugin-store-api'
-import _ from 'lodash'
+import _, { runInContext } from 'lodash'
 import '../styles/marker.css'
 
 let timestamps: string[] = []
@@ -32,6 +32,7 @@ async function checkForFolder() {
 function Marker(props) {
     const [hotkey, setHotkey] = useState<string>('start')
     const [hkPrompt, setHkPrompt] = useState<string>('')
+    const [listening, setListening] = useState(false) 
     const [count, setCount] = useState(0)
     const [manualTime, setManualTime] = useState({seconds: 0, minutes: 0, hours: 0})
     const [timer, setTimer] = useState(false)
@@ -62,11 +63,14 @@ function Marker(props) {
 
     //Invokes rust keyboard listener
     async function getShortcut() {
+        setListening(true)
         await invoke('listen_for_keys').then((message) => {
           if (message == 'Cancelled') {
             return
           }
           changeShortcut(message as string)
+        }).then(() => {
+            setListening(false);
         })
       }
     
@@ -157,18 +161,20 @@ function Marker(props) {
     return(
         <div className="markerBackdrop">
             <div className="hotkeySection">
-                <h1 className="heading">Hotkey</h1>    
+                <h1 id="hotkeyTitle" className="heading">Hotkey</h1>    
                 <button className="hotkeyButton modeButton" 
                         onMouseEnter={() => {setHkPrompt('Change?')} } 
                         onMouseLeave={() => {setHkPrompt(hotkey)}}
                         onClick={getShortcut}>
                         {hkPrompt}
                 </button>
+                                
+                { listening === true && <div className="listenOverlay">LISTENING</div> }
             </div>
 
             <div className="statsSection">
                 <h1 className="heading">Stats</h1>
-                {props.live && <h2>You have made {count} markers this stream!</h2> }
+                {props.live && <p>You have made {count} markers this stream!</p> }
                 <h2>{manualTime.hours}:{manualTime.minutes}:{manualTime.seconds}</h2>
                 { props.live === false && <div> 
                                             <button className="smallButton" onClick={switchTimer}>Start/Stop Timer</button>

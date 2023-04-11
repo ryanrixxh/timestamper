@@ -1,9 +1,5 @@
 @import './common.css';
 
-.infoSection {
-    /* display: flex;
-    justify-content: space-evenly; */
-}
 
 .streamInfo {
     font-family: var(--main-font);

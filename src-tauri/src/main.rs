@@ -181,8 +181,7 @@ fn show_in_filesystem(path: &str) {
 fn main() {
   tauri::Builder::default()
     .setup(|app| {
-      let window = app.get_window("main").expect("Error while creating main window");
-      window.open_devtools();
+      let _window = app.get_window("main").expect("Error while creating main window");
       Ok(())
     })
     .plugin(tauri_plugin_store::Builder::default().build())

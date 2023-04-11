@@ -3,6 +3,9 @@ import '../styles/info.css'
 function Info(props) {
     return(
         <div className="infoSection">
+            { props.live === true &&  <h2 className="loggedDisplay">You are live!</h2> }
+            { props.live === false && <h2 className="loggedDisplay">Offline</h2> }
+        
             <h1 className="heading">
             Stream Info 
             </h1>

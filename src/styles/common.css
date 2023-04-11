@@ -29,19 +29,12 @@
     }
 }
 
-.backdrop {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
 .shoutout {
     position: absolute;
-    left: 90%;
-    top: 90%;
+    left: 50.9%;
+    top: 70%;
     width: 200px;
-    transform: translate(-70%, -50%);
+    transform: translate(-50%, -50%);
     font-family: var(--main-font);
     font-size: 20px;
     color: grey;
@@ -50,9 +43,15 @@
     &:hover {
         color: black;
     }
+
+    &.home {
+        left: 90%;
+        top: 90%;
+    }
 }
 
 .heading {
+    margin: 0;
     font-family: var(--main-font);
     font-size: 36px;
     color: black;

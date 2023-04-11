@@ -1,11 +1,41 @@
 @import './common.css';
 
-.homeBackdrop {
-    width: 700px;
+.backdrop {
+    position: absolute;
+    /* border: solid; */
+    height: 80%;
+    top: 10%;
+    left: 20%;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
 
 .loggedDisplay {
     font-family: var(--main-font);
     font-size: 12pt;
     color: grey;
+}
+
+#logoutButton {
+    position: absolute;
+    left: 90%;
+    top: 82%;
+    width: 200px;
+    transform: translate(-70%, -50%);
+    font-family: var(--main-font);
+    font-size: 20px;
+    color: grey;
+    text-decoration: None;
+    text-align: left;
+    padding: 0;
+
+    &:hover {
+        color: black;
+    }
+
+    font-family: var(--main-font);
+    background: none;
+    border: none;
 }

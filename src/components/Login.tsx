@@ -33,7 +33,7 @@ function Login(props) {
 
   return (
     <div>
-      <div className="backdrop">
+      <div className="titleBackdrop">
         <div className="titleCard">
           <h1 className="title">Timestamper</h1>
           <h2 className="tagline">Capture the moment. Stay in the moment.</h2>

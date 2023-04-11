@@ -94,13 +94,11 @@ function Home(props) {
   
   return (
     <div>
-      <div className="backdrop homeBackdrop">
-        { live === true &&  <h2 className="loggedDisplay">You are live!</h2> }
-        { live === false && <h2 className="loggedDisplay">Offline</h2> }
-        
+      <div className="backdrop">
         {props.online === true && <Info display_name={user?.display_name} 
                                         game_name={stream?.game_name} 
-                                        title={stream?.title}/>  }
+                                        title={stream?.title}
+                                        live={live}/>  }
 
         <Marker user_id={user?.id} 
                 store={store} 
@@ -108,8 +106,8 @@ function Home(props) {
                 delay={delay}
                 live={live}/>
       </div>
-      <button onClick={logout}>Logout</button>
-      <a href="https://www.twitch.tv/futuuure_" target="_blank" className="shoutout">Made by futuuure_</a>
+      <button id="logoutButton" onClick={logout}>Logout</button>
+      <a href="https://www.twitch.tv/futuuure_" target="_blank" className="shoutout home">Made by futuuure_</a>
     </div>
   )
 }

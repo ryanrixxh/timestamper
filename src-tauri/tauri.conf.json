@@ -79,9 +79,9 @@
         "label": "main",
         "fullscreen": false,
         "height": 600,
+        "width": 800,
         "resizable": true,
-        "title": "Timestamper",
-        "width": 800
+        "title": "Timestamper"
       }
     ]
   }

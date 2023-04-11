@@ -1,5 +1,12 @@
 @import './common.css';
 
+.titleBackdrop {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .title {
     margin: 0;
     font-size: 100px;
