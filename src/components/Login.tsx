@@ -49,7 +49,7 @@ function Login(props) {
         </div>
       </div>
 
-    <a href="https://www.twitch.tv/futuuure_" target="_blank" className="shoutout">Made by futuuure_</a>
+    <a href="https://www.twitch.tv/futuuure_" target="_blank" className="shoutout">Made by futuuure</a>
       
 
     </div>

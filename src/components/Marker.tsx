@@ -172,10 +172,12 @@ function Marker(props) {
                 { listening === true && <div className="listenOverlay">LISTENING</div> }
             </div>
 
+            <hr className="divider" />
+
             <div className="statsSection">
-                <h1 className="heading">Stats</h1>
+                <h1 id="statsTitle" className="heading">Stats</h1>
                 {props.live && <p>You have made {count} markers this stream!</p> }
-                <h2>{manualTime.hours}:{manualTime.minutes}:{manualTime.seconds}</h2>
+                <h2 id="timer">{manualTime.hours}:{manualTime.minutes}:{manualTime.seconds}</h2>
                 { props.live === false && <div> 
                                             <button className="smallButton" onClick={switchTimer}>Start/Stop Timer</button>
                                             <button className="smallButton" onClick={resetTimer}>Reset</button>

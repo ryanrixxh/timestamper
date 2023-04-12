@@ -105,9 +105,13 @@ function Home(props) {
                 online={props.online} 
                 delay={delay}
                 live={live}/>
+
+        <div id="logoutAndShoutout">
+          <button id="logoutButton" onClick={logout}>Logout</button>
+          <a href="https://www.twitch.tv/futuuure_" target="_blank" className="shoutout home">Made by futuuure</a>
+        </div>
       </div>
-      <button id="logoutButton" onClick={logout}>Logout</button>
-      <a href="https://www.twitch.tv/futuuure_" target="_blank" className="shoutout home">Made by futuuure_</a>
+
     </div>
   )
 }

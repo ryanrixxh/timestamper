@@ -6,15 +6,26 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 45%;
+    height: clamp(550px, 50%, 100%);
+
+    /* border: solid;
+    border-color: red; */
+
+
+   @media (max-height: 550px) and (min-width: 700px) {
+        flex-direction: row;
+        height: clamp(200px, 20%, 100%);
+        width: clamp(450px, 55%, 100%);
+        justify-content: space-between;
+        /* border: solid; */
+        /* justify-content: space-evenly; */
+    }
 }
 
 .hotkeySection {
 }
 
 .statsSection {
-    /* border: solid;
-    border-color: blue; */
     font-family: var(--main-font);
 }
 
@@ -59,10 +70,13 @@
 }
 
 #hotkeyTitle {
+    margin-top: 15px;
     margin-bottom: 10px;
 }
 
 #statsTitle {
+    margin-top: 15px;
+    margin-bottom: 10px;
 }
 
 #timer {

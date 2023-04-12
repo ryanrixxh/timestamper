@@ -1,7 +1,28 @@
 @import './common.css';
 
+.infoSection {
+    /* border: solid;
+    border-color: blue; */
+    height: clamp(350px, 20%, 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    @media (max-height: 550px) and (min-width: 700px) {
+        height: clamp(200px , 60%, 100%);
+         width: calc(100% - 300px); 
+    }
+    
+
+}
 
 .streamInfo {
     font-family: var(--main-font);
     font-size: 13pt;
 }
+
+.loggedDisplay {
+    margin: 0;
+    padding: 0;
+}
+
