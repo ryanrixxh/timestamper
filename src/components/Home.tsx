@@ -15,6 +15,8 @@ function Home(props) {
   const [live, setLive] = useState<boolean>(false)
   const [delay, setDelay] = useState<number>(0)
 
+  const exitMessage = props.online ? "Logout" : "Exit"
+
   async function logout() {
     setLogged(store, false)
     props.loginMessage("logged out")
@@ -95,7 +97,7 @@ function Home(props) {
   return (
     <div>
       <div className="backdrop">
-        {props.online === true && <Info display_name={user?.display_name} 
+        { props.online === true && <Info display_name={user?.display_name} 
                                         game_name={stream?.game_name} 
                                         title={stream?.title}
                                         live={live}/>  }
@@ -107,7 +109,7 @@ function Home(props) {
                 live={live}/>
 
         <div id="logoutAndShoutout">
-          <button id="logoutButton" onClick={logout}>Logout</button>
+          <button id="logoutButton" onClick={logout}>{exitMessage}</button>
           <a href="https://www.twitch.tv/futuuure_" target="_blank" className="shoutout home">Made by futuuure</a>
         </div>
       </div>
