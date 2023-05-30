@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { invoke } from '@tauri-apps/api/tauri'
 import { Store } from 'tauri-plugin-store-api'
-import Clipboard from 'clipboard'
 import '../styles/login.css'
 
-import PasteBin from './Pastebin'
+import PasteBin from './PasteBin'
+import { authUrl } from '../utils/api'
 
 
 async function setLoggedTrue(store: Store) {
@@ -21,10 +21,9 @@ function Login(props) {
   }
 
   function startLoginProcess() {
+    console.log(authUrl)
     setLoggingIn(true)
   }
-
-
 
   return (
     <div>

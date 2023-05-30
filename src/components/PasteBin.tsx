@@ -1,6 +1,8 @@
 import { readText } from '@tauri-apps/api/clipboard'
+import '../styles/common.css'
 
 function PasteBin() {
+    
 
     //TODO: Needs to invoke a Rust function to read the clipboard
     async function readClipboard() {
@@ -13,7 +15,7 @@ function PasteBin() {
 
     return (
         <div>
-            <button onClick={readClipboard}>Paste</button>
+            <button className='modeButton' onClick={readClipboard}>Paste</button>
         </div>
     )
 }
