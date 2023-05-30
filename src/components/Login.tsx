@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react'
 import { invoke } from '@tauri-apps/api/tauri'
 import { Store } from 'tauri-plugin-store-api'
+import Clipboard from 'clipboard'
 import '../styles/login.css'
+
+import PasteBin from './Pastebin'
 
 
 async function setLoggedTrue(store: Store) {
@@ -9,49 +12,47 @@ async function setLoggedTrue(store: Store) {
 }
 
 function Login(props) {
-
-  const [token, setToken] = useState("empty")
-
-  async function auth() {
-    const store = new Store(".settings.dat")
-    const val: any = await store.get('logged')
-    const status: Boolean = val.value
-   
-    await invoke('twitch_auth_flow', {logged: status}).then((message) => {
-      if (message !== 'access_denied') {
-        setToken(message as any)
-        props.loginMessage(message as any)
-        setLoggedTrue(store)
-      }
-    })
-  } 
+  const [token, setToken] = useState('')
+  const [loggingIn, setLoggingIn] = useState(false)
 
   //Skips the login process with twitch. The prop given to the home component will enforce lack of rendering.
   function skipAuth() {
     props.loginMessage("offline")
   }
 
+  function startLoginProcess() {
+    setLoggingIn(true)
+  }
+
+
+
   return (
     <div>
       <div className="titleBackdrop">
+        
         <div className="titleCard">
           <h1 className="title">Timestamper</h1>
           <h2 className="tagline">Capture the moment. Stay in the moment.</h2>
         </div>
-
+        
+        { !loggingIn && 
         <div className="buttonCard">
-          <button className="modeButton online" onClick={auth}>
-            Login
-          </button>
+          <a href='https://google.com' target='_blank'>
+            <button className="modeButton online" onClick={startLoginProcess}>
+              Login
+            </button>
+          </a>
           <button className="modeButton offline" onClick={skipAuth}>
             Offline
           </button>
-        </div>
+        </div> }
+
+        { loggingIn && 
+        <PasteBin /> }
       </div>
 
     <a href="https://www.twitch.tv/futuuure_" target="_blank" className="shoutout">Made by futuuure</a>
       
-
     </div>
   )
 }
