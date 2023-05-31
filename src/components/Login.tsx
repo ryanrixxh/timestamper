@@ -25,6 +25,11 @@ function Login(props) {
     setLoggingIn(true)
   }
 
+  function saveToken(token: string) {
+    console.log('Login component sees: ', token)
+    setToken(token)
+  }
+
   return (
     <div>
       <div className="titleBackdrop">
@@ -47,7 +52,7 @@ function Login(props) {
         </div> }
 
         { loggingIn && 
-        <PasteBin /> }
+        <PasteBin onTokenRecieve={saveToken}/> }
       </div>
 
     <a href="https://www.twitch.tv/futuuure_" target="_blank" className="shoutout">Made by futuuure</a>

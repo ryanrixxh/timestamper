@@ -3,11 +3,6 @@ use std::sync::{Arc, Mutex};
 use device_query::{DeviceQuery, DeviceEvents, DeviceState};
 use open;
 
-#[derive(Clone, serde::Serialize)]
-struct Payload {
-  message: String,
-}
-
 #[cfg_attr(
   all(not(debug_assertions), target_os = "windows"),
   windows_subsystem = "windows"

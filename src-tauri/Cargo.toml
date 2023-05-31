@@ -35,9 +35,6 @@ default = ["custom-protocol"]
 # DO NOT remove this
 custom-protocol = ["tauri/custom-protocol"]
 
-[patch.crates-io]
-tauri = { git = "https://github.com/tauri-apps/tauri", rev = "3f35b45" }
-
 [target.'cfg(target_os = "windows")'.dependencies]
 webview2-com = { version = "=0.19", default-features = false }
 windows = { version = "=0.39", default-features = false }

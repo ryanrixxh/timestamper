@@ -1,13 +1,10 @@
 import { readText } from '@tauri-apps/api/clipboard'
 import '../styles/common.css'
 
-function PasteBin() {
-    
-
-    //TODO: Needs to invoke a Rust function to read the clipboard
+function PasteBin({onTokenRecieve}) {
     async function readClipboard() {
-        await readText().then((text) => {
-            console.log(text)
+        await readText().then((token) => {
+            onTokenRecieve(token)
         })
     }
 
