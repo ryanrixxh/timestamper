@@ -1,10 +1,10 @@
 import { readText } from '@tauri-apps/api/clipboard'
 import '../styles/common.css'
 
-function PasteBin({onTokenRecieve}) {
+function PasteBin(props) {
     async function readClipboard() {
         await readText().then((token) => {
-            onTokenRecieve(token)
+            props.onTokenRecieve(token)
         })
     }
 
