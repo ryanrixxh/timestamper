@@ -1,14 +1,20 @@
 import { readText } from '@tauri-apps/api/clipboard'
+import { validateToken } from '../utils/api'
 import '../styles/common.css'
 
 function PasteBin(props) {
+   
     async function readClipboard() {
-        await readText().then((token) => {
-            props.onTokenRecieve(token)
+        await readText().then(async (token) => {
+            await validateToken(token).then((valid) => {
+                if (valid) {
+                    props.onTokenRecieve(token)
+                } else {
+                    // TODO: Handle an invalid token error
+               }            
+            })
         })
     }
-
-    //TODO: Needs input validation of the copied text
 
     return (
         <div>
