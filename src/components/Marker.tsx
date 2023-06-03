@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { invoke } from '@tauri-apps/api/tauri'
 import { register, unregister } from '@tauri-apps/api/globalShortcut'
 import {writeTextFile, BaseDirectory, exists, createDir } from '@tauri-apps/api/fs'
@@ -36,15 +36,15 @@ function Marker(props) {
     const [count, setCount] = useState(0)
     const [manualTime, setManualTime] = useState({seconds: 0, minutes: 0, hours: 0})
     const [timer, setTimer] = useState(false)
-    const [timerText, setTimerText] = useState('Start')
+    const timerText = useMemo<string>(() => {
+        return timer ? 'Stop' : 'Start'
+    }, [timer])
 
     function switchTimer() {
         if(timer === true) {
             setTimer(false)
-            setTimerText('Start')
         } else {
             setTimer(true)
-            setTimerText('Stop')
         }
     }
     function resetTimer() {
