@@ -30,18 +30,21 @@ async function checkForFolder() {
 }
 
 function Marker(props) {
-    const [hotkey, setHotkey] = useState<string>('start')
+    const [hotkey, setHotkey] = useState<string>('')
     const [hkPrompt, setHkPrompt] = useState<string>('')
     const [listening, setListening] = useState(false) 
     const [count, setCount] = useState(0)
     const [manualTime, setManualTime] = useState({seconds: 0, minutes: 0, hours: 0})
     const [timer, setTimer] = useState(false)
+    const [timerText, setTimerText] = useState('Start')
 
     function switchTimer() {
         if(timer === true) {
             setTimer(false)
+            setTimerText('Start')
         } else {
             setTimer(true)
+            setTimerText('Stop')
         }
     }
     function resetTimer() {
@@ -180,7 +183,7 @@ function Marker(props) {
                 <p id="uptime">Uptime:</p>
                 <h2 id="timer">{manualTime.hours}:{manualTime.minutes}:{manualTime.seconds}</h2>
                 { props.live === false && <div> 
-                                            { !props.online && <button className="smallButton" onClick={switchTimer}>Start/Stop Timer</button> }
+                                            { !props.online && <button className="smallButton" onClick={switchTimer}>{timerText}</button> }
                                             { !props.online && <button className="smallButton" onClick={resetTimer}>Reset</button> }
                                         </div> }
                 <button className="smallButton" onClick={showTimestampFolder}>Show timestamps in folder</button> 

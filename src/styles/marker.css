@@ -88,3 +88,16 @@
 #uptime {
     margin: 0;
 }
+
+.divider {
+    border: solid;
+    border-width: 1px;
+    border-color: var(--secondary-color);
+    width: 100%;
+    height: 0;
+
+    @media (max-height: 550px) and (min-width: 700px) {
+        height: 100%;
+        width: 0;
+    }
+}
