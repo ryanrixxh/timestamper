@@ -17,12 +17,11 @@ function App() {
 
   import.meta.env.VITE_LOGGED = false
   
-  const loginMessage = (message: string) => {
+  function loginMessage(message: string) {
     getStatus()
     if(message == 'logged out') {
       setPageState('Login')
       if (online === true) {
-        revokeToken(authToken)
         setOnline(false)
       }
     } else if(message == 'offline') {

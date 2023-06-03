@@ -11,6 +11,7 @@ function PasteBin(props) {
                     props.onTokenRecieve(token)
                 } else {
                     // TODO: Handle an invalid token error
+                    console.error("Token invalid")
                }            
             })
         })

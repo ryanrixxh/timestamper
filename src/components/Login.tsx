@@ -21,7 +21,6 @@ function Login(props) {
   }
 
   function startLoginProcess() {
-    console.log(authUrl)
     setLoggingIn(true)
   }
 
@@ -29,6 +28,10 @@ function Login(props) {
     console.log('Login component sees: ', token)
     setToken(token)
   }
+
+  useEffect(() => {
+    props.loginMessage(token)
+  }, [token])
 
   return (
     <div>
