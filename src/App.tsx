@@ -11,7 +11,7 @@ async function getStatus() {
 
 function App() {
   const [pageState, setPageState] = useState('Login')
-  const [authToken, setAuthToken] = useState('empty')
+  const [authToken, setAuthToken] = useState('')
   const [online, setOnline] = useState(false)
 
 
@@ -19,12 +19,12 @@ function App() {
   
   function loginMessage(message: string) {
     getStatus()
-    if(message == 'logged out') {
+    if(message === 'logged out') {
       setPageState('Login')
       if (online === true) {
         setOnline(false)
       }
-    } else if(message == 'offline') {
+    } else if(message === 'offline') {
       setPageState('Home')
       setOnline(false)
     } else if(message !== 'logged out' && message.length > 0) {

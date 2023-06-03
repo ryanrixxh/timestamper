@@ -29,6 +29,10 @@ function Login(props) {
     setToken(token)
   }
 
+  function handleCancel() {
+    setLoggingIn(false)
+  }
+
   useEffect(() => {
     props.loginMessage(token)
   }, [token])
@@ -55,7 +59,7 @@ function Login(props) {
         </div> }
 
         { loggingIn && 
-        <PasteBin onTokenRecieve={saveToken}/> }
+        <PasteBin onTokenRecieve={saveToken} cancel={handleCancel}/> }
       </div>
 
     <a href="https://www.twitch.tv/futuuure_" target="_blank" className="shoutout">Made by futuuure</a>

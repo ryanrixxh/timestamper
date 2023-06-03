@@ -1,6 +1,6 @@
 import { readText } from '@tauri-apps/api/clipboard'
 import { validateToken } from '../utils/api'
-import '../styles/common.css'
+import '../styles/pastebin.css'
 
 function PasteBin(props) {
    
@@ -17,9 +17,17 @@ function PasteBin(props) {
         })
     }
 
+    function cancel() {
+        console.log('cancelling!')
+        props.cancel('cancelled')
+    }
+
     return (
-        <div>
-            <button className='modeButton' onClick={readClipboard}>Paste</button>
+        <div className='pasteBinBackdrop'>
+            <div className='buttonWrapper'>
+                <button className='modeButton pasteButton' onClick={readClipboard}>Paste</button>
+                <button className='cancelButton' onClick={cancel}>Cancel</button>
+            </div>
         </div>
     )
 }

@@ -5,7 +5,7 @@ import {writeTextFile, BaseDirectory, exists, createDir } from '@tauri-apps/api/
 import { appLocalDataDir } from '@tauri-apps/api/path'
 import { postMarker } from "../utils/api"
 import { Store } from 'tauri-plugin-store-api'
-import _, { runInContext } from 'lodash'
+import _ from 'lodash'
 import '../styles/marker.css'
 
 let timestamps: string[] = []
@@ -160,7 +160,7 @@ function Marker(props) {
 
     return(
         <div className="markerBackdrop">
-            <div className="hotkeySection">
+            <section className="hotkeySection">
                 <h1 id="hotkeyTitle" className="heading">Hotkey</h1>    
                 <button className="hotkeyButton modeButton" 
                         onMouseEnter={() => {setHkPrompt('Change?')} } 
@@ -170,11 +170,11 @@ function Marker(props) {
                 </button>
                                 
                 { listening === true && <div className="listenOverlay">LISTENING</div> }
-            </div>
+            </section>
 
             <hr className="divider" />
 
-            <div className="statsSection">
+            <section className="statsSection">
                 <h1 id="statsTitle" className="heading">Stats</h1>
                 {props.live && <p>You have made {count} markers this stream!</p> }
                 <p id="uptime">Uptime:</p>
@@ -184,7 +184,7 @@ function Marker(props) {
                                             { !props.online && <button className="smallButton" onClick={resetTimer}>Reset</button> }
                                         </div> }
                 <button className="smallButton" onClick={showTimestampFolder}>Show timestamps in folder</button> 
-            </div>
+            </section>
         </div>
     ) 
 }
