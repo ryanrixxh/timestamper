@@ -1,6 +1,14 @@
 import axios from 'axios'
+import { concat } from 'lodash'
 
 let client
+
+// URL for grabbing tokens
+export const authUrl = 'https://id.twitch.tv/oauth2/authorize' + 
+                       '?response_type=token' + 
+                       '&redirect_uri=http://localhost:5173' + // TODO: Needs to change to configurable variable
+                       '&scope=' + encodeURIComponent('channel:manage:polls')
+
 
 export function createClient(token_input) {
   client = axios.create({
@@ -15,7 +23,7 @@ export function createClient(token_input) {
 }
 
 // Checks that the token is valid
-export async function validateToken(token_input) {
+export async function validateToken(token_input): Promise<boolean> {
   const options = {
     headers: {
       'Authorization': 'Bearer ' + token_input
@@ -23,7 +31,11 @@ export async function validateToken(token_input) {
   } 
   const response = await axios.get("https://id.twitch.tv/oauth2/validate", options)
   console.log(response)
-  return response
+  if (response.status === 200) {
+    return true
+  } else {
+    return false
+  }
 }
 
 export async function revokeToken(token_input) {

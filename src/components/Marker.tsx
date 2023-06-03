@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { invoke } from '@tauri-apps/api/tauri'
 import { register, unregister } from '@tauri-apps/api/globalShortcut'
 import {writeTextFile, BaseDirectory, exists, createDir } from '@tauri-apps/api/fs'
 import { appLocalDataDir } from '@tauri-apps/api/path'
 import { postMarker } from "../utils/api"
 import { Store } from 'tauri-plugin-store-api'
-import _, { runInContext } from 'lodash'
+import _ from 'lodash'
 import '../styles/marker.css'
 
 let timestamps: string[] = []
@@ -30,12 +30,15 @@ async function checkForFolder() {
 }
 
 function Marker(props) {
-    const [hotkey, setHotkey] = useState<string>('start')
+    const [hotkey, setHotkey] = useState<string>('')
     const [hkPrompt, setHkPrompt] = useState<string>('')
     const [listening, setListening] = useState(false) 
     const [count, setCount] = useState(0)
     const [manualTime, setManualTime] = useState({seconds: 0, minutes: 0, hours: 0})
     const [timer, setTimer] = useState(false)
+    const timerText = useMemo<string>(() => {
+        return timer ? 'Stop' : 'Start'
+    }, [timer])
 
     function switchTimer() {
         if(timer === true) {
@@ -160,7 +163,7 @@ function Marker(props) {
 
     return(
         <div className="markerBackdrop">
-            <div className="hotkeySection">
+            <section className="hotkeySection">
                 <h1 id="hotkeyTitle" className="heading">Hotkey</h1>    
                 <button className="hotkeyButton modeButton" 
                         onMouseEnter={() => {setHkPrompt('Change?')} } 
@@ -170,21 +173,21 @@ function Marker(props) {
                 </button>
                                 
                 { listening === true && <div className="listenOverlay">LISTENING</div> }
-            </div>
+            </section>
 
             <hr className="divider" />
 
-            <div className="statsSection">
+            <section className="statsSection">
                 <h1 id="statsTitle" className="heading">Stats</h1>
                 {props.live && <p>You have made {count} markers this stream!</p> }
                 <p id="uptime">Uptime:</p>
                 <h2 id="timer">{manualTime.hours}:{manualTime.minutes}:{manualTime.seconds}</h2>
                 { props.live === false && <div> 
-                                            { !props.online && <button className="smallButton" onClick={switchTimer}>Start/Stop Timer</button> }
+                                            { !props.online && <button className="smallButton" onClick={switchTimer}>{timerText}</button> }
                                             { !props.online && <button className="smallButton" onClick={resetTimer}>Reset</button> }
                                         </div> }
                 <button className="smallButton" onClick={showTimestampFolder}>Show timestamps in folder</button> 
-            </div>
+            </section>
         </div>
     ) 
 }

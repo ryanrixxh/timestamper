@@ -11,21 +11,20 @@ async function getStatus() {
 
 function App() {
   const [pageState, setPageState] = useState('Login')
-  const [authToken, setAuthToken] = useState('empty')
+  const [authToken, setAuthToken] = useState('')
   const [online, setOnline] = useState(false)
 
 
   import.meta.env.VITE_LOGGED = false
   
-  const loginMessage = (message: string) => {
+  function loginMessage(message: string) {
     getStatus()
-    if(message == 'logged out') {
+    if(message === 'logged out') {
       setPageState('Login')
       if (online === true) {
-        revokeToken(authToken)
         setOnline(false)
       }
-    } else if(message == 'offline') {
+    } else if(message === 'offline') {
       setPageState('Home')
       setOnline(false)
     } else if(message !== 'logged out' && message.length > 0) {

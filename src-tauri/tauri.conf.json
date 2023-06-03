@@ -33,6 +33,9 @@
       },
       "path": {
         "all": true
+      },
+      "clipboard": {
+        "readText": true
       }
     },
     "bundle": {

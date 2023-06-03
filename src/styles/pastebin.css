@@ -1,0 +1,28 @@
+@import './common.css';
+
+.pasteBinBackdrop {
+    /* border: solid; */
+    display: flex;
+    justify-content: center;
+}
+
+.buttonWrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.pasteButton {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.cancelButton {
+    font-family: var(--main-font);
+    font-size: 15px;
+    border: none;
+    background: none;
+
+    &:hover {
+        color: grey;
+    }
+}
