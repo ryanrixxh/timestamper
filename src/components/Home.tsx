@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { createClient, getStreamData, getUserData, postEventSub, postMarker } from '../utils/api'
 import { User, Stream } from '../utils/interfaces'
-import { Store } from 'tauri-plugin-store-api'
+import { setLocalToken } from '../utils/storage'
 import Info from './Info'
 import Marker from './Marker'
 
@@ -9,16 +9,23 @@ import '../styles/home.css'
 
 function Home(props) {
   // Store keeps persisent data
-  const store: Store = new Store(".settings.dat")
   const [user, setUser] = useState<User>()
   const [stream, setStream] = useState<Stream>()
   const [live, setLive] = useState<boolean>(false)
   const [delay, setDelay] = useState<number>(0)
 
   const exitMessage = props.online ? "Logout" : "Exit"
+  
+  function formatTime(time: Date): number {
+    let start: number = time.valueOf()
+    let now: number = Date.now().valueOf()
+    let gap = (now - start) / 1000
+    gap = Math.round(gap)
+    return gap
+  }
 
   async function logout() {
-    setLogged(store, false)
+    setLocalToken(props.store, undefined)
     props.loginMessage("logged out")
   } 
 
@@ -104,7 +111,7 @@ function Home(props) {
                                         live={live}/>  }
 
         <Marker user_id={user?.id} 
-                store={store} 
+                store={props.store} 
                 online={props.online} 
                 delay={delay}
                 live={live}/>
@@ -117,18 +124,6 @@ function Home(props) {
 
     </div>
   )
-}
-
-async function setLogged(store: Store, logStatus: Boolean) {
-  await store.set('logged', { value: logStatus})
-}
-
-function formatTime(time: Date): number {
-  let start: number = time.valueOf()
-  let now: number = Date.now().valueOf()
-  let gap = (now - start) / 1000
-  gap = Math.round(gap)
-  return gap
 }
 
 export default Home
