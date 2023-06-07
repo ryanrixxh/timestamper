@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { createClient, getStreamData, getUserData, postEventSub, postMarker } from '../utils/api'
+import { createClient, getStreamData, getUserData, postEventSub, revokeToken } from '../utils/api'
 import { User, Stream } from '../utils/interfaces'
 import { setLocalToken } from '../utils/storage'
 import Info from './Info'
@@ -26,6 +26,7 @@ function Home(props) {
 
   async function logout() {
     setLocalToken(props.store, undefined)
+    revokeToken(props.token)
     props.loginMessage("logged out")
   } 
 
@@ -42,7 +43,7 @@ function Home(props) {
     // Websocket to listen for changes in stream status
   async function createWebsocket(id: string, eventType: string) {
     let ws_id
-    const socket = new WebSocket('wss://eventsub-beta.wss.twitch.tv/ws')
+    const socket = new WebSocket('wss://eventsub.wss.twitch.tv/ws')
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data)
       // When a welcome message is sent, establish the subscription type
@@ -65,7 +66,6 @@ function Home(props) {
           // Handle the ws messages based on subscription type
           switch (message.metadata.subscription_type) {
             case 'stream.online': {
-              console.log('stream has gone online')
               let start_time: Date = new Date(message.payload.event.started_at)
               setDelay(formatTime(start_time))
               setLive(true)

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { appWindow } from '@tauri-apps/api/window'
 import Login from './components/Login'
 import Home from './components/Home'
-import { validateToken } from './utils/api'
+import { revokeToken, validateToken } from './utils/api'
 import { getLocalToken } from './utils/storage'
 import { Store } from 'tauri-plugin-store-api'
 

@@ -31,7 +31,7 @@ export async function validateToken(token_input): Promise<boolean> {
   }
 
   try {
-    const response = await axios.get("https://id.twitch.tv/oauth2/validate", options)
+    await axios.get("https://id.twitch.tv/oauth2/validate", options)
     return true
   } catch (error) {
     return false
