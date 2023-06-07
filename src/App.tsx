@@ -28,16 +28,15 @@ function App() {
       setOnline(false)
     } else if(message !== 'logged out' && message.length > 0) {
         let token = message
-        validateToken(token)
-        setAuthToken(token)
-        setOnline(true)
-        setPageState('Home')
+        validateToken(token).then((valid) => {
+          if (valid) {
+            setAuthToken(token)
+            setOnline(true)
+            setPageState('Home')
+          }
+        })
     }
   }
-
-  useEffect(() => {
-    console.log(getLocalToken(store))
-  }, [])
   
   return (
     <div>

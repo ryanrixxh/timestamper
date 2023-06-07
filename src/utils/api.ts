@@ -26,14 +26,14 @@ export function createClient(token_input) {
 export async function validateToken(token_input): Promise<boolean> {
   const options = {
     headers: {
-      'Authorization': 'Bearer ' + token_input
+      'Authorization': 'Bearer ' + token_input,
     }
-  } 
-  const response = await axios.get("https://id.twitch.tv/oauth2/validate", options)
-  console.log(response)
-  if (response.status === 200) {
+  }
+
+  try {
+    const response = await axios.get("https://id.twitch.tv/oauth2/validate", options)
     return true
-  } else {
+  } catch (error) {
     return false
   }
 }

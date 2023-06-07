@@ -87,7 +87,7 @@ function Home(props) {
 
   useEffect(() => { 
     if (props.online) {
-      console.log(props.token)
+      // console.log(props.token)
       createClient(props.token)
       getUser()
     }

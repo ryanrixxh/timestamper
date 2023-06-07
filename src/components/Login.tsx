@@ -20,9 +20,15 @@ function Login(props) {
   }
 
   async function saveToken(token: string) {
-    console.log('Login component sees: ', token)
     setToken(token)
     setLocalToken(props.store, token)
+  }
+
+  async function getToken() {
+    let token: string = (await props.store.get('token')).value
+    if (token != undefined) {
+      setToken(token)
+    }
   }
 
   function handleCancel() {
@@ -34,8 +40,8 @@ function Login(props) {
   }, [token])
 
   useEffect(() => {
-    console.log(getLocalToken(props.store))
-  })
+    getToken()
+  }, [])
 
   return (
     <div>
