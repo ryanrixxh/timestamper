@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { getLocalToken, setLocalToken } from '../utils/storage'
 
 import '../styles/login.css'
 import PasteBin from './PasteBin'
@@ -21,7 +20,7 @@ function Login(props) {
 
   async function saveToken(token: string) {
     setToken(token)
-    setLocalToken(props.store, token)
+    await props.store.set('token', { value: token})
   }
 
   async function getToken() {

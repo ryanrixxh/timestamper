@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { createClient, getStreamData, getUserData, postEventSub, revokeToken } from '../utils/api'
 import { User, Stream } from '../utils/interfaces'
-import { setLocalToken } from '../utils/storage'
 import Info from './Info'
 import Marker from './Marker'
 
@@ -25,7 +24,7 @@ function Home(props) {
   }
 
   async function logout() {
-    setLocalToken(props.store, undefined)
+    await props.store.set('token', { value: undefined})
     revokeToken(props.token)
     props.loginMessage("logged out")
   } 
