@@ -6,19 +6,18 @@ function PasteBin(props) {
    
     async function readClipboard() {
         await readText().then(async (token) => {
-            await validateToken(token).then((valid) => {
-                if (valid) {
-                    props.onTokenRecieve(token)
-                } else {
-                    // TODO: Handle an invalid token error
-                    console.error("Token invalid")
-               }            
-            })
+            let valid = await validateToken(token)
+            if (valid) {
+                props.onTokenRecieve(token)
+            } else {
+                // TODO: Error needs to show to the user
+                console.error("Token invalid")
+                cancel()
+            }            
         })
     }
 
     function cancel() {
-        console.log('cancelling!')
         props.cancel('cancelled')
     }
 

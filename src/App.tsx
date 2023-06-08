@@ -1,15 +1,13 @@
-import { useState, useContext } from 'react'
-import { appWindow } from '@tauri-apps/api/window'
+import { useState } from 'react'
 import Login from './components/Login'
 import Home from './components/Home'
-import { validateToken, revokeToken } from './utils/api'
+import { validateToken } from './utils/api'
 import { Store } from 'tauri-plugin-store-api'
 
-async function getStatus() {
-  const store = new Store('.settings.dat')
-}
+
 
 function App() {
+  const store: Store = new Store(".settings.dat")
   const [pageState, setPageState] = useState('Login')
   const [authToken, setAuthToken] = useState('')
   const [online, setOnline] = useState(false)
@@ -18,7 +16,6 @@ function App() {
   import.meta.env.VITE_LOGGED = false
   
   function loginMessage(message: string) {
-    getStatus()
     if(message === 'logged out') {
       setPageState('Login')
       if (online === true) {
@@ -29,17 +26,25 @@ function App() {
       setOnline(false)
     } else if(message !== 'logged out' && message.length > 0) {
         let token = message
-        validateToken(token)
-        setAuthToken(token)
-        setOnline(true)
-        setPageState('Home')
+        validateToken(token).then((valid) => {
+          if (valid) {
+            setAuthToken(token)
+            setOnline(true)
+            setPageState('Home')
+          }
+        })
     }
   }
   
   return (
     <div>
-      { pageState === 'Login' && <Login loginMessage={loginMessage}/>}
-      { pageState === 'Home' && <Home token={authToken} loginMessage={loginMessage} online={online}/> }
+      { pageState === 'Login' && <Login loginMessage={loginMessage}
+                                        store={store}/> }
+      
+      { pageState === 'Home' && <Home token={authToken} 
+                                      loginMessage={loginMessage} 
+                                      online={online}
+                                      store={store} /> }
     </div>
   )
 }

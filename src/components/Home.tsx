@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
-import { createClient, getStreamData, getUserData, postEventSub, postMarker } from '../utils/api'
+import { createClient, getStreamData, getUserData, postEventSub, revokeToken } from '../utils/api'
 import { User, Stream } from '../utils/interfaces'
-import { Store } from 'tauri-plugin-store-api'
 import Info from './Info'
 import Marker from './Marker'
 
@@ -9,16 +8,24 @@ import '../styles/home.css'
 
 function Home(props) {
   // Store keeps persisent data
-  const store: Store = new Store(".settings.dat")
   const [user, setUser] = useState<User>()
   const [stream, setStream] = useState<Stream>()
   const [live, setLive] = useState<boolean>(false)
   const [delay, setDelay] = useState<number>(0)
 
   const exitMessage = props.online ? "Logout" : "Exit"
+  
+  function formatTime(time: Date): number {
+    let start: number = time.valueOf()
+    let now: number = Date.now().valueOf()
+    let gap = (now - start) / 1000
+    gap = Math.round(gap)
+    return gap
+  }
 
   async function logout() {
-    setLogged(store, false)
+    await props.store.set('token', { value: undefined})
+    revokeToken(props.token)
     props.loginMessage("logged out")
   } 
 
@@ -35,7 +42,7 @@ function Home(props) {
     // Websocket to listen for changes in stream status
   async function createWebsocket(id: string, eventType: string) {
     let ws_id
-    const socket = new WebSocket('wss://eventsub-beta.wss.twitch.tv/ws')
+    const socket = new WebSocket('wss://eventsub.wss.twitch.tv/ws')
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data)
       // When a welcome message is sent, establish the subscription type
@@ -58,7 +65,6 @@ function Home(props) {
           // Handle the ws messages based on subscription type
           switch (message.metadata.subscription_type) {
             case 'stream.online': {
-              console.log('stream has gone online')
               let start_time: Date = new Date(message.payload.event.started_at)
               setDelay(formatTime(start_time))
               setLive(true)
@@ -80,7 +86,7 @@ function Home(props) {
 
   useEffect(() => { 
     if (props.online) {
-      console.log(props.token)
+      // console.log(props.token)
       createClient(props.token)
       getUser()
     }
@@ -104,7 +110,7 @@ function Home(props) {
                                         live={live}/>  }
 
         <Marker user_id={user?.id} 
-                store={store} 
+                store={props.store} 
                 online={props.online} 
                 delay={delay}
                 live={live}/>
@@ -117,18 +123,6 @@ function Home(props) {
 
     </div>
   )
-}
-
-async function setLogged(store: Store, logStatus: Boolean) {
-  await store.set('logged', { value: logStatus})
-}
-
-function formatTime(time: Date): number {
-  let start: number = time.valueOf()
-  let now: number = Date.now().valueOf()
-  let gap = (now - start) / 1000
-  gap = Math.round(gap)
-  return gap
 }
 
 export default Home

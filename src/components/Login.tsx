@@ -1,15 +1,9 @@
 import { useState, useEffect } from 'react'
-import { invoke } from '@tauri-apps/api/tauri'
-import { Store } from 'tauri-plugin-store-api'
+
 import '../styles/login.css'
-
 import PasteBin from './PasteBin'
-import { authUrl } from '../utils/api'
 
 
-async function setLoggedTrue(store: Store) {
-  await store.set('logged', { value: true})
-}
 
 function Login(props) {
   const [token, setToken] = useState('')
@@ -24,9 +18,16 @@ function Login(props) {
     setLoggingIn(true)
   }
 
-  function saveToken(token: string) {
-    console.log('Login component sees: ', token)
+  async function saveToken(token: string) {
     setToken(token)
+    await props.store.set('token', { value: token})
+  }
+
+  async function getToken() {
+    let token: string = (await props.store.get('token')).value
+    if (token != undefined) {
+      setToken(token)
+    }
   }
 
   function handleCancel() {
@@ -36,6 +37,10 @@ function Login(props) {
   useEffect(() => {
     props.loginMessage(token)
   }, [token])
+
+  useEffect(() => {
+    getToken()
+  }, [])
 
   return (
     <div>
