@@ -4,8 +4,8 @@
     position: absolute;
     height: clamp(550px, 80%, 100%);
     top: 10%;
-    left: 20%;
-    width: clamp(400px , 60%, 100%);
+    left: 5%;
+    width: clamp(400px , 90%, 100%);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
