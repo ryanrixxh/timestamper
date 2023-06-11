@@ -126,7 +126,7 @@ function Home(props) {
                   live={live}/> }
 
         { optionsOn && 
-          <Options />}
+          <Options store={props.store} /> }
 
         <div id="logoutAndShoutout">
           <button id="logoutButton" onClick={logout}>{exitMessage}</button>
