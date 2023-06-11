@@ -55,17 +55,22 @@
 }
 
 #settingsCog {
-   min-height: 30px; 
-   max-height: 30px;
-   font-size: 35px;
-   position: absolute;
-   left: 98%;
-   top: 5%;
-   transform: translate(-50%, -50%);
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
 
-   &:hover {
+    min-height: 30px; 
+    max-height: 30px;
+    font-size: 35px;
+    position: absolute;
+    left: 98%;
+    top: 5%;
+    transform: translate(-50%, -50%);
+
+    &:hover {
     min-height: 35px; 
     max-height: 35px;
     font-size: 40px;
-   }
+    }
 }

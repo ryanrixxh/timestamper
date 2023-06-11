@@ -4,6 +4,7 @@ import { User, Stream } from '../utils/interfaces'
 import { HiCog6Tooth } from 'react-icons/hi2'
 import Info from './Info'
 import Marker from './Marker'
+import Options from './Options'
 
 import '../styles/home.css'
 
@@ -123,6 +124,9 @@ function Home(props) {
                   online={props.online} 
                   delay={delay}
                   live={live}/> }
+
+        { optionsOn && 
+          <Options />}
 
         <div id="logoutAndShoutout">
           <button id="logoutButton" onClick={logout}>{exitMessage}</button>
