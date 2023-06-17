@@ -4,30 +4,10 @@ import { register, unregister } from '@tauri-apps/api/globalShortcut'
 import {writeTextFile, BaseDirectory, exists, createDir } from '@tauri-apps/api/fs'
 import { appLocalDataDir } from '@tauri-apps/api/path'
 import { postMarker } from "../utils/api"
-import { Store } from 'tauri-plugin-store-api'
 import _ from 'lodash'
 import '../styles/marker.css'
 
-let timestamps: string[] = []
-let date = new Date()
 
-async function saveHotkey(store: Store, hotkey: String) {
-    await store.set('hotkey', { value: hotkey})
-}
-
-async function showTimestampFolder() {
-    await appLocalDataDir().then((path) => {
-        invoke('show_in_filesystem' ,{path: path + 'timestamps'})
-    })
-} 
-
-//Checks local AppData for a timestamps folder
-async function checkForFolder() {
-    const dirExists = await exists('timestamps', { dir: BaseDirectory.AppLocalData})
-    if (dirExists === false) {
-        await createDir('timestamps', {dir: BaseDirectory.AppLocalData, recursive: true})
-    }
-}
 
 function Marker(props) {
     const [hotkey, setHotkey] = useState<string>('')
@@ -39,6 +19,23 @@ function Marker(props) {
     const timerText = useMemo<string>(() => {
         return timer ? 'Stop' : 'Start'
     }, [timer])
+
+    let timestamps: string[] = []
+    let date = new Date()
+
+    async function showTimestampFolder() {
+        await appLocalDataDir().then((path) => {
+            invoke('show_in_filesystem' ,{path: path + 'timestamps'})
+        })
+    } 
+
+    //Checks local AppData for a timestamps folder
+    async function checkForFolder() {
+        const dirExists = await exists('timestamps', { dir: BaseDirectory.AppLocalData})
+        if (dirExists === false) {
+            await createDir('timestamps', {dir: BaseDirectory.AppLocalData, recursive: true})
+        }
+    }
 
     function switchTimer() {
         if(timer === true) {
@@ -56,12 +53,17 @@ function Marker(props) {
     
     //Writes marker to local app data in the filesystem.
     async function writeMarkerToFs() {
-        const newTimestamp = manualTime.hours + ':' + manualTime.minutes + ':' + manualTime.seconds
-        timestamps.push(newTimestamp)
-        console.log(timestamps)
-        let timestampString = timestamps.toString()
-        let formatted = timestampString.replaceAll(',', '\n')
-        await writeTextFile('timestamps/' + date.toDateString() + '.txt', formatted, {dir: BaseDirectory.AppLocalData})
+        let writeToggled: boolean = (await props.store.get('option-localsave')).value
+        console.log('Running writeToggled is: ', writeToggled)
+        if (writeToggled) {
+            const newTimestamp = manualTime.hours + ':' + manualTime.minutes + ':' + manualTime.seconds
+            timestamps.push(newTimestamp)
+            let timestampString = timestamps.toString()
+            let formatted = timestampString.replaceAll(',', '\n')
+            await writeTextFile('timestamps/' + date.toDateString() + '.txt', formatted, {dir: BaseDirectory.AppLocalData})
+        } else {
+            console.log('write toggled failed')
+        }
     }
 
     //Invokes rust keyboard listener
@@ -93,10 +95,14 @@ function Marker(props) {
         }
         
         setHotkey(current_hotkey)
-        saveHotkey(props.store, current_hotkey)
+        saveHotkey(current_hotkey)
 
         setHkPrompt(current_hotkey)
     }
+
+    async function saveHotkey(hotkey: String) {
+        await props.store.set('hotkey', { value: hotkey})
+    }  
 
     //Loads the shortcut from the store
     async function loadShortcut() {
@@ -119,7 +125,7 @@ function Marker(props) {
         if (count > 0) {
             if (timer === true) {
                 writeMarkerToFs() 
-                if(props.online === true) {
+                if (props.online === true) {
                     postMarker(props.user_id)
                 }
             } else {
