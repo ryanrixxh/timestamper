@@ -9,7 +9,8 @@ function Options(props) {
     }
 
     useEffect(() => {
-        console.log('checking for options values')
+        console.log('getting options')
+        
     },[])
 
     return (

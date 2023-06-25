@@ -14,3 +14,6 @@ export interface Stream {
     start_time?: string,
 }
 
+export interface Option {
+    value: boolean
+}
