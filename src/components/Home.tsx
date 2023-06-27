@@ -27,7 +27,6 @@ function Home(props) {
 
   async function logout() {
     await props.store.set('token', { value: undefined})
-    revokeToken(props.token)
     props.loginMessage("logged out")
   } 
 

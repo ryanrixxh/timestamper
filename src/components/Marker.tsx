@@ -13,7 +13,7 @@ function Marker(props) {
     const [hotkey, setHotkey] = useState<string>('')
     const [hkPrompt, setHkPrompt] = useState<string>('')
     const [listening, setListening] = useState(false) 
-    const [count, setCount] = useState(0)
+    const [count, setCount] = useState<number>(0)
     const [manualTime, setManualTime] = useState({seconds: 0, minutes: 0, hours: 0})
     const [timer, setTimer] = useState(false)
     const timerText = useMemo<string>(() => {
