@@ -13,7 +13,3 @@ export interface Stream {
     category_name?: string,
     start_time?: string,
 }
-
-export interface Option {
-    value: boolean
-}
