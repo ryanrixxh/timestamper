@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Login from './components/Login'
 import Home from './components/Home'
 import { validateToken } from './utils/api'
+
 import { Store } from 'tauri-plugin-store-api'
 
 
@@ -11,10 +12,10 @@ function App() {
   const [pageState, setPageState] = useState('Login')
   const [authToken, setAuthToken] = useState('')
   const [online, setOnline] = useState(false)
-
+  const [options, setOptions] = useState(new Map())
 
   import.meta.env.VITE_LOGGED = false
-  
+
   function loginMessage(message: string) {
     if(message === 'logged out') {
       setPageState('Login')
@@ -39,7 +40,7 @@ function App() {
   return (
     <div>
       { pageState === 'Login' && <Login loginMessage={loginMessage}
-                                        store={store}/> }
+                                        store={store} /> }
       
       { pageState === 'Home' && <Home token={authToken} 
                                       loginMessage={loginMessage} 

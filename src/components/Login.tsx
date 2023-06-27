@@ -3,8 +3,6 @@ import { useState, useEffect } from 'react'
 import '../styles/login.css'
 import PasteBin from './PasteBin'
 
-
-
 function Login(props) {
   const [token, setToken] = useState('')
   const [loggingIn, setLoggingIn] = useState(false)

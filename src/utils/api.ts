@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { concat } from 'lodash'
 
 let client
 
@@ -7,7 +6,7 @@ let client
 export const authUrl = 'https://id.twitch.tv/oauth2/authorize' + 
                        '?response_type=token' + 
                        '&redirect_uri=http://localhost:5173' + // TODO: Needs to change to configurable variable
-                       '&scope=' + encodeURIComponent('channel:manage:polls')
+                       '&scope=' + encodeURIComponent('channel:manage:polls') // TODO: Needs to manage markers
 
 
 export function createClient(token_input) {
@@ -43,7 +42,6 @@ export async function revokeToken(token_input) {
   params.append('client_id', 'v89m5cded20ey1ppxxsi5ni53c3rv0')
   params.append('token', token_input)
   const response = await axios.post('https://id.twitch.tv/oauth2/revoke', params)
-  console.log(response)
 }
 
 // Gets user details (namely id) for other requests to use
@@ -63,7 +61,6 @@ export async function getStreamData(id: any) {
 export async function postMarker(id: any) {
   const request = '/streams/markers?user_id=' + id
   const response = await client.post(request)
-  console.log(response)
   return response
 }
 

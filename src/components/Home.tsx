@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react'
 import { createClient, getStreamData, getUserData, postEventSub, revokeToken } from '../utils/api'
 import { User, Stream } from '../utils/interfaces'
+import { HiCog6Tooth } from 'react-icons/hi2'
 import Info from './Info'
 import Marker from './Marker'
+import Options from './Options'
 
 import '../styles/home.css'
 
 function Home(props) {
-  // Store keeps persisent data
-  const [user, setUser] = useState<User>()
-  const [stream, setStream] = useState<Stream>()
-  const [live, setLive] = useState<boolean>(false)
-  const [delay, setDelay] = useState<number>(0)
+  const [user, setUser] = useState<User>() 
+  const [stream, setStream] = useState<Stream>() 
+  const [live, setLive] = useState<boolean>(false) 
+  const [delay, setDelay] = useState<number>(0) 
+  const [optionsOn, setOptionsOn] = useState<boolean>(false) 
 
   const exitMessage = props.online ? "Logout" : "Exit"
   
@@ -25,7 +27,6 @@ function Home(props) {
 
   async function logout() {
     await props.store.set('token', { value: undefined})
-    revokeToken(props.token)
     props.loginMessage("logged out")
   } 
 
@@ -84,9 +85,13 @@ function Home(props) {
     }
   }
 
+  function showOptions() {
+    console.log('Showing options')
+    setOptionsOn(!optionsOn)
+  }
+
   useEffect(() => { 
     if (props.online) {
-      // console.log(props.token)
       createClient(props.token)
       getUser()
     }
@@ -104,21 +109,28 @@ function Home(props) {
   return (
     <div>
       <div className="backdrop">
-        { props.online === true && <Info display_name={user?.display_name} 
-                                        game_name={stream?.game_name} 
-                                        title={stream?.title}
-                                        live={live}/>  }
+        <HiCog6Tooth id='settingsCog' onClick={showOptions}/>
+        { props.online && !optionsOn && 
+         <Info display_name={user?.display_name} 
+                                   game_name={stream?.game_name} 
+                                   title={stream?.title}
+                                   live={live}/>  }
 
-        <Marker user_id={user?.id} 
-                store={props.store} 
-                online={props.online} 
-                delay={delay}
-                live={live}/>
+        { !optionsOn && 
+          <Marker user_id={user?.id} 
+                  store={props.store} 
+                  online={props.online} 
+                  delay={delay}
+                  live={live}/> }
+
+        { optionsOn && 
+          <Options store={props.store} /> }
 
         <div id="logoutAndShoutout">
           <button id="logoutButton" onClick={logout}>{exitMessage}</button>
           <a href="https://www.twitch.tv/futuuure_" target="_blank" className="shoutout home">Made by futuuure</a>
         </div>
+
       </div>
 
     </div>

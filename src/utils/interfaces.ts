@@ -13,4 +13,3 @@ export interface Stream {
     category_name?: string,
     start_time?: string,
 }
-

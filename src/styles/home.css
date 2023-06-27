@@ -4,8 +4,8 @@
     position: absolute;
     height: clamp(550px, 80%, 100%);
     top: 10%;
-    left: 20%;
-    width: clamp(400px , 60%, 100%);
+    left: 5%;
+    width: clamp(400px , 90%, 100%);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -52,4 +52,25 @@
     display: flex;
     flex-direction: column;
     transform: translate(-100%, -100%);
+}
+
+#settingsCog {
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+
+    min-height: 30px; 
+    max-height: 30px;
+    font-size: 35px;
+    position: absolute;
+    left: 98%;
+    top: 5%;
+    transform: translate(-50%, -50%);
+
+    &:hover {
+    min-height: 35px; 
+    max-height: 35px;
+    font-size: 40px;
+    }
 }
