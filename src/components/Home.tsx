@@ -86,7 +86,6 @@ function Home(props) {
   }
 
   function showOptions() {
-    console.log('Showing options')
     setOptionsOn(!optionsOn)
   }
 
@@ -110,21 +109,25 @@ function Home(props) {
     <div>
       <div className="backdrop">
         <HiCog6Tooth id='settingsCog' onClick={showOptions}/>
-        { props.online && !optionsOn && 
+        
+        { optionsOn && 
+          <Options store={props.store} /> }
+
+
+        { props.online &&
          <Info display_name={user?.display_name} 
                                    game_name={stream?.game_name} 
                                    title={stream?.title}
-                                   live={live}/>  }
+                                   live={live}
+                                   optionsOn={optionsOn}/>  }
 
-        { !optionsOn && 
           <Marker user_id={user?.id} 
                   store={props.store} 
                   online={props.online} 
                   delay={delay}
-                  live={live}/> }
+                  live={live}
+                  optionsOn={optionsOn}/> 
 
-        { optionsOn && 
-          <Options store={props.store} /> }
 
         <div id="logoutAndShoutout">
           <button id="logoutButton" onClick={logout}>{exitMessage}</button>

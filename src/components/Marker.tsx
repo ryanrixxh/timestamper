@@ -61,9 +61,7 @@ function Marker(props) {
             let timestampString = timestamps.toString()
             let formatted = timestampString.replaceAll(',', '\n')
             await writeTextFile('timestamps/' + date.toDateString() + '.txt', formatted, {dir: BaseDirectory.AppLocalData})
-        } else {
-            console.log('write toggled failed')
-        }
+        } 
     }
 
     //Invokes rust keyboard listener
@@ -118,7 +116,13 @@ function Marker(props) {
     useEffect(() => {
         loadShortcut()
         checkForFolder()
+        
     }, [])
+
+    useEffect(() => {
+        const backdrop = document.getElementById('markerBackdrop')
+        backdrop.style.visibility = props.optionsOn ? 'hidden' : 'visible'
+    }, [props.optionsOn])
 
     //Whenever the count is updated, trigger the creation of a timestamp
     useEffect(() => {
@@ -168,7 +172,7 @@ function Marker(props) {
     }, [props.live])
 
     return(
-        <div className="markerBackdrop">
+        <div id="markerBackdrop" style={{display: props.optionsOn ? 'hidden' : 'visible'}}>
             <section className="hotkeySection">
                 <h1 id="hotkeyTitle" className="heading">Hotkey</h1>    
                 <button className="hotkeyButton modeButton" 
