@@ -16,11 +16,11 @@ function Marker(props) {
     const [count, setCount] = useState<number>(0)
     const [manualTime, setManualTime] = useState({seconds: 0, minutes: 0, hours: 0})
     const [timer, setTimer] = useState(false)
+    const [timestamps, setTimestamps] = useState<string[]>([])
     const timerText = useMemo<string>(() => {
         return timer ? 'Stop' : 'Start'
     }, [timer])
 
-    let timestamps: string[] = []
     let date = new Date()
 
     async function showTimestampFolder() {
