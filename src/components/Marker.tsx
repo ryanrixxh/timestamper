@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react"
 import { invoke } from '@tauri-apps/api/tauri'
-import { register, unregister } from '@tauri-apps/api/globalShortcut'
+import { register, unregisterAll } from '@tauri-apps/api/globalShortcut'
 import {writeTextFile, BaseDirectory, exists, createDir } from '@tauri-apps/api/fs'
 import { appLocalDataDir } from '@tauri-apps/api/path'
 import { postMarker } from "../utils/api"
@@ -95,23 +95,16 @@ function Marker(props) {
       }
     
     async function changeShortcut(newHotkey: string) {
-        await unregister(hotkey)
+        await unregisterAll()
+            .finally(() => {
+                register(newHotkey, () => {
+                    // This logic is ran when the hotkey is pressed
+                    setCount(count => count + 1)
+                })
+        })
         let current_hotkey = newHotkey
-        try {
-            await register(newHotkey, async () => {
-                // This logic is ran when the hotkey is pressed
-                setCount(count => count + 1)
-            })
-        } catch(e) {
-            if(typeof e === 'string' && e.includes('already registered')) { 
-            } else { 
-                throw e 
-            }
-        }
-        
         setHotkey(current_hotkey)
         saveHotkey(current_hotkey)
-
         setHkPrompt(current_hotkey)
     }
 
@@ -125,7 +118,6 @@ function Marker(props) {
         const savedHotkey: string = (val.value !== null) ? val.value : ''
         setHotkey(savedHotkey)
         changeShortcut(savedHotkey)
-
         setHkPrompt(savedHotkey)
     }
 
