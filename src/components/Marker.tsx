@@ -180,7 +180,7 @@ function Marker(props) {
     }, [props.live])
 
     return(
-        <div id="markerBackdrop" style={{display: props.optionsOn ? 'hidden' : 'visible'}}>
+        <div id="markerBackdrop" style={{visibility: props.optionsOn ? 'hidden' : 'visible'}}>
             <section className="hotkeySection">
                 <h1 id="hotkeyTitle" className="heading">Hotkey</h1>    
                 <button className="hotkeyButton modeButton" 

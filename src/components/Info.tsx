@@ -2,7 +2,7 @@ import '../styles/info.css'
 
 function Info(props) {
     return(
-        <div className="infoSection">
+        <div className="infoSection" style={{visibility: props.optionsOn ? 'hidden' : 'visible'}}>
             <div>
                 { props.live === true &&  <h2 className="loggedDisplay">You are live!</h2> }
                 { props.live === false && <h2 className="loggedDisplay">Offline</h2> }
