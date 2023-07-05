@@ -101,3 +101,8 @@
         width: 0;
     }
 }
+
+#feedback {
+    margin-left: 10px;
+    font-family: var(--main-font);
+}

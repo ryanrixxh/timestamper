@@ -14,6 +14,7 @@ function Marker(props) {
     const [hkPrompt, setHkPrompt] = useState<string>('')
     const [listening, setListening] = useState(false) 
     const [count, setCount] = useState<number>(0)
+    const [success, setSuccess] = useState<boolean>(false)
     const [manualTime, setManualTime] = useState({seconds: 0, minutes: 0, hours: 0})
     const [timer, setTimer] = useState(false)
     const [timestamps, setTimestamps] = useState<string[]>([])
@@ -55,13 +56,29 @@ function Marker(props) {
     async function writeMarkerToFs() {
         let writeToggled: boolean = (await props.store.get('option-localsave')).value
         console.log('Running writeToggled is: ', writeToggled)
-        if (writeToggled) {
-            const newTimestamp = manualTime.hours + ':' + manualTime.minutes + ':' + manualTime.seconds
-            timestamps.push(newTimestamp)
-            let timestampString = timestamps.toString()
-            let formatted = timestampString.replaceAll(',', '\n')
-            await writeTextFile('timestamps/' + date.toDateString() + '.txt', formatted, {dir: BaseDirectory.AppLocalData})
-        } 
+        if (!writeToggled) {
+            return
+        }
+
+        const newTimestamp = manualTime.hours + ':' + manualTime.minutes + ':' + manualTime.seconds
+        timestamps.push(newTimestamp)
+        let timestampString = timestamps.toString()
+        let formatted = timestampString.replaceAll(',', '\n')
+        await writeTextFile('timestamps/' + date.toDateString() + '.txt', formatted, {dir: BaseDirectory.AppLocalData})
+            .catch(() => { console.error('Write to filesystem failed') })
+            .finally(() => { showFeedback() })
+    }
+    
+    //Posts marker using API
+    async function sendMarkerToTwitch(id: string) {
+        await postMarker(id)
+            .catch(() => { console.error('Failed to post marker') })
+            .finally(() => { showFeedback() })
+    }
+
+    function showFeedback() {
+        setSuccess(true)
+        setTimeout(setSuccess, 2000)
     }
 
     //Invokes rust keyboard listener
@@ -116,7 +133,6 @@ function Marker(props) {
     useEffect(() => {
         loadShortcut()
         checkForFolder()
-        
     }, [])
 
     useEffect(() => {
@@ -130,7 +146,7 @@ function Marker(props) {
             if (timer === true) {
                 writeMarkerToFs() 
                 if (props.online === true) {
-                    postMarker(props.user_id)
+                    sendMarkerToTwitch(props.user_id)
                 }
             } else {
                 setCount(count => --count)
@@ -181,8 +197,8 @@ function Marker(props) {
                         onClick={getShortcut}>
                         {hkPrompt}
                 </button>
-                                
-                { listening === true && <div className="listenOverlay">LISTENING</div> }
+                {success && <span id='feedback'>Saved!</span> }                        
+                { listening && <div className="listenOverlay">LISTENING</div> }
             </section>
 
             <hr className="divider" />
