@@ -1,11 +1,14 @@
 import axios from 'axios'
 
 let client
+const host = import.meta.env.VITE_APP_HOST
+const client_id = import.meta.env.VITE_CLIENT_ID
 
 // URL for grabbing tokens
 export const authUrl = 'https://id.twitch.tv/oauth2/authorize' + 
                        '?response_type=token' + 
-                       '&redirect_uri=http://localhost:5173' + // TODO: Needs to change to configurable variable
+                       '&client_id=' + client_id +
+                       '&redirect_uri=' + host + // TODO: Needs to change to configurable variable
                        '&scope=' + encodeURIComponent('channel:manage:polls') // TODO: Needs to manage markers
 
 

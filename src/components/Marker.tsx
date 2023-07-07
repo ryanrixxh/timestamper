@@ -55,11 +55,9 @@ function Marker(props) {
     //Writes marker to local app data in the filesystem.
     async function writeMarkerToFs() {
         let writeToggled: boolean = (await props.store.get('option-localsave')).value
-        console.log('Running writeToggled is: ', writeToggled)
         if (!writeToggled) {
             return
         }
-
         const newTimestamp = manualTime.hours + ':' + manualTime.minutes + ':' + manualTime.seconds
         timestamps.push(newTimestamp)
         let timestampString = timestamps.toString()

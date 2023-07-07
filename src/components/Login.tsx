@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { authUrl } from '../utils/api'
 
 import '../styles/login.css'
 import PasteBin from './PasteBin'
@@ -51,7 +52,7 @@ function Login(props) {
         
         { !loggingIn && 
         <div className="buttonCard">
-          <a href='https://google.com' target='_blank'>
+          <a href={authUrl} target='_blank'>
             <button className="modeButton online" onClick={startLoginProcess}>
               Login
             </button>

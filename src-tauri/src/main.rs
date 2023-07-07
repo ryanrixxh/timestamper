@@ -1,12 +1,9 @@
+#![windows_subsystem = "windows"]
+
 use tauri::{Manager};
 use std::sync::{Arc, Mutex};
 use device_query::{DeviceQuery, DeviceEvents, DeviceState};
 use open;
-
-#[cfg_attr(
-  all(not(debug_assertions), target_os = "windows"),
-  windows_subsystem = "windows"
-)]
 
 //TODO: Failed keywrite needs to be handled without a panic
 #[tauri::command]
