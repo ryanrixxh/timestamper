@@ -4,6 +4,9 @@ https://firebot.app/
 Firebot is a all-in-one Bot that can allow hotkey assignment amoung many other things. For this reason I've began to use this and recommend others do the same.
 I'll keep timestamper up and available in case people would like to use it or fork it, but I'll be focusing my efforts on trying to solve problems that arent yet solved.
 
+https://streamer.bot/
+Streamer bot is another more configurable and extendible bot written in C# that allows for custom scripting
+
 # Timestamper Early Development Version
 
 ## Build from source instructions...
